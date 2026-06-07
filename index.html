@@ -3,1374 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Vision Studio - Premium Media Editor</title>
+    <title>Aura Vision Studio - Funcional</title>
     <style>
-        /* ==========================================================================
-           VARIABLES Y CONFIGURACIÓN BASE
-           ========================================================================== */
+        /* Variables y Reset Base */
         :root {
-            --bg-primary: #0a0a0c;
-            --bg-secondary: #141417;
-            --bg-tertiary: #1f1f23;
-            --bg-glass: rgba(20, 20, 23, 0.7);
-            --text-main: #f3f3f4;
-            --text-muted: #8b8b93;
-            --accent-primary: #6366f1;
-            --accent-hover: #4f46e5;
-            --accent-success: #10b981;
+            --bg-primary: #0a0a0c; --bg-secondary: #141417; --bg-tertiary: #1f1f23;
+            --text-main: #f3f3f4; --text-muted: #8b8b93;
+            --accent-primary: #6366f1; --accent-hover: #4f46e5;
             --border-light: rgba(255, 255, 255, 0.08);
-            --border-focus: rgba(99, 102, 241, 0.4);
-            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.2);
-            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        /* ==========================================================================
-           RESET Y ESTILOS GLOBALES
-           ========================================================================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-main);
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 600;
-            letter-spacing: -0.02em;
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-            outline: none;
-            font-family: inherit;
-        }
-
-        input, textarea {
-            font-family: inherit;
-            outline: none;
-        }
-
-        /* Barra de desplazamiento personalizada */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--bg-tertiary);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
-        }
-
-        /* ==========================================================================
-           HEADER Y NAVEGACIÓN
-           ========================================================================== */
-        header {
-            height: 60px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            z-index: 100;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            background: linear-gradient(90deg, #fff, #a5b4fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .tabs-container {
-            display: flex;
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-            padding: 4px;
-        }
-
-        .tab-btn {
-            background: transparent;
-            color: var(--text-muted);
-            padding: 8px 24px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: var(--transition-smooth);
-        }
-
-        .tab-btn:hover {
-            color: var(--text-main);
-        }
-
-        .tab-btn.active {
-            background: var(--bg-secondary);
-            color: var(--text-main);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 16px;
-        }
-
-        .btn-export {
-            background: var(--accent-primary);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: var(--transition-smooth);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .btn-export:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-        }
-
-        /* ==========================================================================
-           CONTENEDOR PRINCIPAL Y ESPACIOS DE TRABAJO
-           ========================================================================== */
-        main {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .workspace {
-            display: none;
-            width: 100%;
-            height: 100%;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .workspace.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ==========================================================================
-           LABORATORIO DE FOTOGRAFÍA
-           ========================================================================== */
-        #photo-lab {
-            display: none;
-            flex-direction: row;
-        }
-
-        #photo-lab.active {
-            display: flex;
-        }
-
-        /* Panel Izquierdo: Herramientas Nivel Dios */
-        .sidebar-left {
-            width: 280px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border-light);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        .panel-section {
-            padding: 24px;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .panel-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-        }
-
-        .tool-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .tool-btn {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-            padding: 16px 8px;
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            transition: var(--transition-smooth);
-        }
-
-        .tool-btn:hover {
-            border-color: var(--accent-primary);
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        .tool-btn i {
-            font-size: 1.5rem;
-            color: var(--accent-primary);
-        }
-
-        .slider-container {
-            margin-top: 16px;
-        }
-
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            appearance: none;
-            background: var(--bg-tertiary);
-            height: 4px;
-            border-radius: 2px;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--accent-primary);
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
-        }
-
-        /* Centro: Dropzone y Canvas */
-        .editor-center {
-            flex: 1;
-            background: var(--bg-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            position: relative;
-        }
-
-        .drop-zone {
-            width: 100%;
-            max-width: 800px;
-            height: 500px;
-            border: 2px dashed var(--border-light);
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-secondary);
-            transition: var(--transition-smooth);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .drop-zone.dragover {
-            border-color: var(--accent-primary);
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        .drop-zone-content {
-            text-align: center;
-            pointer-events: none;
-        }
-
-        .drop-zone-content i {
-            font-size: 3rem;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-        }
-
-        .drop-zone-content p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-
-        .drop-zone-content span {
-            font-size: 0.85rem;
-            color: #555;
-        }
-
-        #photo-canvas-container {
-            display: none;
-            width: 100%;
-            height: 100%;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #photo-preview {
-            max-width: 100%;
-            max-height: 100%;
-            box-shadow: var(--shadow-subtle);
-            border-radius: 4px;
-            transition: filter 0.3s ease;
-        }
-
-        /* Panel Derecho: Filtros */
-        .sidebar-right {
-            width: 320px;
-            background: var(--bg-secondary);
-            border-left: 1px solid var(--border-light);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        .filter-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            padding: 24px;
-        }
-
-        .filter-item {
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: var(--transition-smooth);
-        }
-
-        .filter-item:hover, .filter-item.active {
-            border-color: var(--accent-primary);
-        }
-
-        .filter-preview {
-            width: 100%;
-            height: 80px;
-            background: #2a2a30;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .filter-name {
-            padding: 8px;
-            text-align: center;
-            font-size: 0.8rem;
-            background: var(--bg-tertiary);
-        }
-
-        /* ==========================================================================
-           ESTUDIO DE VIDEO
-           ========================================================================== */
-        #video-studio {
-            display: none;
-            flex-direction: column;
-        }
-
-        #video-studio.active {
-            display: flex;
-        }
-
-        /* Área Superior del Video */
-        .video-top-section {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-
-        /* Panel de Herramientas de Video */
-        .video-tools {
-            width: 300px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border-light);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .video-tool-list {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .v-tool-btn {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-light);
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: var(--text-main);
-            font-size: 0.9rem;
-            transition: var(--transition-smooth);
-        }
-
-        .v-tool-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--accent-primary);
-        }
-
-        .v-tool-btn i {
-            color: var(--accent-primary);
-            font-size: 1.2rem;
-            width: 24px;
-            text-align: center;
-        }
-
-        /* Reproductor de Video */
-        .video-player-area {
-            flex: 1;
-            background: var(--bg-primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            position: relative;
-        }
-
-        .video-wrapper {
-            width: 100%;
-            max-width: 900px;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border-radius: 12px;
-            box-shadow: var(--shadow-subtle);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 1px solid var(--border-light);
-        }
-
-        .video-upload-prompt {
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            color: var(--text-muted);
-            z-index: 10;
-        }
-
-        .video-upload-btn {
-            background: var(--bg-tertiary);
-            color: var(--text-main);
-            padding: 12px 24px;
-            border-radius: 8px;
-            border: 1px solid var(--border-light);
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: var(--transition-smooth);
-        }
-
-        .video-upload-btn:hover {
-            border-color: var(--accent-primary);
-            color: white;
-        }
-
-        .video-controls {
-            width: 100%;
-            max-width: 900px;
-            height: 48px;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            margin-top: 16px;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            gap: 16px;
-            border: 1px solid var(--border-light);
-        }
-
-        .ctrl-btn {
-            background: none;
-            color: var(--text-main);
-            font-size: 1.2rem;
-            opacity: 0.8;
-        }
-
-        .ctrl-btn:hover {
-            opacity: 1;
-            color: var(--accent-primary);
-        }
-
-        .time-display {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-family: monospace;
-        }
-
-        .scrubber {
-            flex: 1;
-            height: 4px;
-            background: var(--bg-tertiary);
-            border-radius: 2px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .scrubber-fill {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0%;
-            background: var(--accent-primary);
-            border-radius: 2px;
-        }
-
-        /* Línea de Tiempo (Timeline) */
-        .timeline-section {
-            height: 280px;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-light);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .timeline-header {
-            height: 40px;
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            gap: 24px;
-            background: var(--bg-tertiary);
-        }
-
-        .timeline-tools {
-            display: flex;
-            gap: 12px;
-        }
-
-        .t-tool {
-            color: var(--text-muted);
-            background: none;
-            font-size: 1rem;
-        }
-
-        .t-tool:hover {
-            color: var(--text-main);
-        }
-
-        .timeline-ruler {
-            flex: 1;
-            height: 100%;
-            position: relative;
-            border-left: 1px solid var(--border-light);
-            background: repeating-linear-gradient(
-                90deg,
-                transparent,
-                transparent 49px,
-                var(--border-light) 50px
-            );
-            opacity: 0.3;
-        }
-
-        .timeline-tracks {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 8px 0;
-            position: relative;
-        }
-
-        .track {
-            height: 60px;
-            display: flex;
-            margin-bottom: 4px;
-            background: rgba(255,255,255,0.02);
-        }
-
-        .track-info {
-            width: 150px;
-            min-width: 150px;
-            border-right: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            gap: 10px;
-            background: var(--bg-secondary);
-            z-index: 2;
-        }
-
-        .track-content {
-            flex: 1;
-            position: relative;
-            background: var(--bg-primary);
-        }
-
-        .clip {
-            position: absolute;
-            height: 44px;
-            top: 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-            font-size: 0.75rem;
-            color: white;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-        }
-
-        .clip.video-clip {
-            background: linear-gradient(90deg, #4f46e5, #6366f1);
-            left: 50px;
-            width: 400px;
-        }
-
-        .clip.audio-clip {
-            background: linear-gradient(90deg, #10b981, #34d399);
-            left: 50px;
-            width: 400px;
-        }
-
-        .clip.text-clip {
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
-            left: 100px;
-            width: 150px;
-        }
-
-        .playhead {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 200px;
-            width: 2px;
-            background: #ef4444;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        .playhead::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -4px;
-            width: 10px;
-            height: 10px;
-            background: #ef4444;
-            border-radius: 50%;
-        }
-
-        /* ==========================================================================
-           FORMULARIO DE CONTACTO AUTOMATIZADO Y MODAL
-           ========================================================================== */
-        .floating-contact {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            background: var(--accent-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            box-shadow: var(--shadow-glow), var(--shadow-subtle);
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            z-index: 1000;
-        }
-
-        .floating-contact:hover {
-            transform: scale(1.1) rotate(15deg);
-            background: var(--accent-hover);
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            width: 100%;
-            max-width: 450px;
-            border-radius: 16px;
-            padding: 32px;
-            border: 1px solid var(--border-light);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            position: relative;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            transition: var(--transition-smooth);
-        }
-
-        .close-modal:hover {
-            color: white;
-        }
-
-        .modal-header {
-            margin-bottom: 24px;
-        }
-
-        .modal-header h2 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-            background: linear-gradient(90deg, #fff, #a5b4fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .modal-header p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-light);
-            color: var(--text-main);
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            transition: var(--transition-smooth);
-        }
-
-        .form-control:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 2px var(--border-focus);
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background: var(--accent-primary);
-            color: white;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-top: 10px;
-            transition: var(--transition-smooth);
-        }
-
-        .btn-submit:hover {
-            background: var(--accent-hover);
-            box-shadow: var(--shadow-glow);
-        }
-
-        /* Notificación Toast */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 3000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast {
-            background: var(--bg-tertiary);
-            border-left: 4px solid var(--accent-success);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 6px;
-            box-shadow: var(--shadow-subtle);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transform: translateX(120%);
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            font-size: 0.95rem;
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        .toast i {
-            color: var(--accent-success);
-            font-size: 1.2rem;
-        }
-
-        /* Utilidades de Iconos (Simulados con entidades o texto simple para evitar dependencias externas masivas, aunque se asume un kit si se requiere. Aquí usaremos símbolos/emojis o texto corto por pureza de código) */
-        .icon-placeholder {
-            display: inline-block;
-            font-style: normal;
-        }
+            --font-main: system-ui, -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-main); background: var(--bg-primary); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        button { cursor: pointer; border: none; outline: none; font-family: inherit; }
+
+        /* Header */
+        header { height: 60px; background: var(--bg-secondary); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+        .brand { font-weight: bold; font-size: 1.2rem; background: linear-gradient(90deg, #fff, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tabs-container { display: flex; background: var(--bg-tertiary); border-radius: 8px; padding: 4px; }
+        .tab-btn { background: transparent; color: var(--text-muted); padding: 8px 24px; border-radius: 6px; font-weight: 500; transition: 0.3s; }
+        .tab-btn.active { background: var(--bg-secondary); color: var(--text-main); }
+        .btn-export { background: var(--accent-primary); color: white; padding: 8px 20px; border-radius: 6px; font-weight: 600; }
+
+        /* Workspaces */
+        main { flex: 1; display: flex; position: relative; }
+        .workspace { display: none; width: 100%; height: 100%; }
+        .workspace.active { display: flex; }
+
+        /* Sidebar UI */
+        .sidebar { width: 300px; background: var(--bg-secondary); border-right: 1px solid var(--border-light); display: flex; flex-direction: column; overflow-y: auto; }
+        .panel-section { padding: 20px; border-bottom: 1px solid var(--border-light); }
+        .panel-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+        
+        /* Sliders & Botones */
+        .slider-container { margin-top: 15px; }
+        .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+        input[type="range"] { width: 100%; cursor: pointer; }
+        .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-tool { background: var(--bg-tertiary); border: 1px solid var(--border-light); color: white; padding: 12px; border-radius: 8px; font-size: 0.85rem; transition: 0.2s; }
+        .btn-tool:hover { border-color: var(--accent-primary); }
+        .btn-action { width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-light); color: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+
+        /* Centro de Edición */
+        .editor-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #000; position: relative; }
+        .upload-area { width: 100%; max-width: 600px; height: 300px; border: 2px dashed var(--border-light); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; background: var(--bg-secondary); }
+        .upload-area:hover { border-color: var(--accent-primary); }
+        
+        /* Media Elements */
+        #photo-preview { max-width: 100%; max-height: 80vh; display: none; transition: filter 0.1s; }
+        .video-wrapper { position: relative; width: 100%; max-width: 800px; display: none; }
+        video { width: 100%; border-radius: 8px; background: black; }
+        
+        /* Controles de Video */
+        .video-controls { width: 100%; max-width: 800px; background: var(--bg-secondary); padding: 12px 20px; border-radius: 8px; display: none; align-items: center; gap: 15px; margin-top: 15px; border: 1px solid var(--border-light); }
+        .ctrl-btn { background: none; color: white; font-size: 1.2rem; width: 30px; }
+        .time-display { font-size: 0.85rem; font-family: monospace; color: var(--text-muted); }
+        .progress-bar { flex: 1; height: 6px; background: var(--bg-tertiary); border-radius: 3px; cursor: pointer; position: relative; }
+        .progress-fill { height: 100%; background: var(--accent-primary); width: 0%; border-radius: 3px; pointer-events: none; }
+
+        /* Texto Dinámico (Video) */
+        .overlay-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2rem; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); cursor: text; outline: none; border: 1px dashed transparent; padding: 5px; }
+        .overlay-text:focus { border-color: var(--accent-primary); }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">
-            <span class="icon-placeholder">✨</span> AURA STUDIO
-        </div>
-        
+        <div class="brand">✨ AURA STUDIO</div>
         <div class="tabs-container">
-            <button class="tab-btn active" data-target="photo-lab">Laboratorio de Fotografía</button>
+            <button class="tab-btn active" data-target="photo-lab">Lab. Fotografía</button>
             <button class="tab-btn" data-target="video-studio">Estudio de Video</button>
         </div>
-
-        <div class="header-actions">
-            <button class="btn-export" id="main-export-btn">Exportar Proyecto</button>
-        </div>
+        <button class="btn-export">Exportar Proyecto</button>
     </header>
 
     <main>
         <section id="photo-lab" class="workspace active">
-            <aside class="sidebar-left">
+            <aside class="sidebar">
                 <div class="panel-section">
-                    <h3 class="panel-title">Restauración Nivel Dios</h3>
+                    <h3 class="panel-title">Filtros Rápidos</h3>
                     <div class="tool-grid">
-                        <button class="tool-btn" onclick="applyEffect('restore')">
-                            <span class="icon-placeholder">🪄</span>
-                            <span>Restauración IA</span>
-                        </button>
-                        <button class="tool-btn" onclick="applyEffect('unscratch')">
-                            <span class="icon-placeholder">🩹</span>
-                            <span>Quitar Rasguños</span>
-                        </button>
-                        <button class="tool-btn" onclick="applyEffect('colorize')">
-                            <span class="icon-placeholder">🎨</span>
-                            <span>Colorización IA</span>
-                        </button>
-                        <button class="tool-btn" onclick="applyEffect('upscale')">
-                            <span class="icon-placeholder">🔍</span>
-                            <span>Escalado 4K</span>
-                        </button>
+                        <button class="btn-tool" onclick="applyPreset('grayscale(100%)')">B & N</button>
+                        <button class="btn-tool" onclick="applyPreset('sepia(80%)')">Vintage</button>
+                        <button class="btn-tool" onclick="applyPreset('saturate(200%)')">Vibrante</button>
+                        <button class="btn-tool" onclick="applyPreset('none')">Original</button>
                     </div>
                 </div>
-
                 <div class="panel-section">
-                    <h3 class="panel-title">Ajustes Finos</h3>
+                    <h3 class="panel-title">Ajustes Manuales</h3>
                     
                     <div class="slider-container">
-                        <div class="slider-label">
-                            <span>Exposición</span>
-                            <span id="val-expo">0</span>
-                        </div>
-                        <input type="range" min="-100" max="100" value="0" id="slide-expo">
+                        <div class="slider-label"><span>Brillo</span> <span id="val-bright">100%</span></div>
+                        <input type="range" id="slide-bright" min="0" max="200" value="100">
                     </div>
                     
                     <div class="slider-container">
-                        <div class="slider-label">
-                            <span>Contraste</span>
-                            <span id="val-cont">0</span>
-                        </div>
-                        <input type="range" min="-100" max="100" value="0" id="slide-cont">
+                        <div class="slider-label"><span>Contraste</span> <span id="val-cont">100%</span></div>
+                        <input type="range" id="slide-cont" min="0" max="200" value="100">
                     </div>
 
                     <div class="slider-container">
-                        <div class="slider-label">
-                            <span>Nitidez Automática</span>
-                            <span id="val-sharp">0</span>
-                        </div>
-                        <input type="range" min="0" max="100" value="0" id="slide-sharp">
+                        <div class="slider-label"><span>Saturación</span> <span id="val-sat">100%</span></div>
+                        <input type="range" id="slide-sat" min="0" max="200" value="100">
                     </div>
                 </div>
             </aside>
 
-            <div class="editor-center" id="photo-center">
-                <div class="drop-zone" id="photo-dropzone">
+            <div class="editor-center">
+                <div class="upload-area" id="photo-upload-area" onclick="document.getElementById('photo-input').click()">
+                    <h2>📥 Cargar Fotografía</h2>
+                    <p>Haz clic para seleccionar un archivo</p>
                     <input type="file" id="photo-input" hidden accept="image/*">
-                    <div class="drop-zone-content">
-                        <div class="icon-placeholder" style="font-size:3rem; margin-bottom:1rem;">📥</div>
-                        <p>Arrastra y suelta tu fotografía aquí</p>
-                        <span>o haz clic para explorar tus archivos</span>
-                    </div>
                 </div>
-                <div id="photo-canvas-container">
-                    <img id="photo-preview" src="" alt="Vista previa">
-                </div>
+                <img id="photo-preview" src="" alt="Vista previa">
             </div>
-
-            <aside class="sidebar-right">
-                <div class="panel-section" style="border-bottom:none; padding-bottom:0;">
-                    <h3 class="panel-title">Catálogo de Filtros Premium</h3>
-                </div>
-                <div class="filter-list">
-                    <div class="filter-item" onclick="setFilter('none')">
-                        <div class="filter-preview" style="background:#333;">Original</div>
-                        <div class="filter-name">Original</div>
-                    </div>
-                    <div class="filter-item" onclick="setFilter('sepia(0.8)')">
-                        <div class="filter-preview" style="background:#5c4a3d;">Vintage</div>
-                        <div class="filter-name">Vintage 1920</div>
-                    </div>
-                    <div class="filter-item" onclick="setFilter('grayscale(1) contrast(1.2)')">
-                        <div class="filter-preview" style="background:#222;">Noir</div>
-                        <div class="filter-name">Cinematic Noir</div>
-                    </div>
-                    <div class="filter-item" onclick="setFilter('saturate(1.5) contrast(1.1)')">
-                        <div class="filter-preview" style="background:#4a2c82;">Vibrant</div>
-                        <div class="filter-name">Ultra Vibrant</div>
-                    </div>
-                    <div class="filter-item" onclick="setFilter('hue-rotate(90deg)')">
-                        <div class="filter-preview" style="background:#2c824a;">Cyber</div>
-                        <div class="filter-name">Cyberpunk</div>
-                    </div>
-                    <div class="filter-item" onclick="setFilter('brightness(1.2) saturate(0.8)')">
-                        <div class="filter-preview" style="background:#82756a;">Fade</div>
-                        <div class="filter-name">Matte Fade</div>
-                    </div>
-                </div>
-            </aside>
         </section>
-
 
         <section id="video-studio" class="workspace">
-            
-            <div class="video-top-section">
-                <aside class="video-tools">
-                    <div class="panel-section">
-                        <h3 class="panel-title">Panel de Edición Avanzado</h3>
-                    </div>
-                    <div class="video-tool-list">
-                        <button class="v-tool-btn">
-                            <span class="icon-placeholder">✂️</span> Recorte Inteligente
-                        </button>
-                        <button class="v-tool-btn">
-                            <span class="icon-placeholder">🔄</span> Transiciones Pro
-                        </button>
-                        <button class="v-tool-btn">
-                            <span class="icon-placeholder">📝</span> Texto Dinámico
-                        </button>
-                        <button class="v-tool-btn">
-                            <span class="icon-placeholder">🎙️</span> Sincronización Faceless
-                        </button>
-                        <button class="v-tool-btn">
-                            <span class="icon-placeholder">🌟</span> Efectos Visuales
-                        </button>
-                        <button class="v-tool-btn">
-                            <span class="icon-placeholder">😎</span> Stickers Animados
-                        </button>
-                    </div>
-                </aside>
-
-                <div class="video-player-area">
-                    <div class="video-wrapper">
-                        <div class="video-upload-prompt" id="video-prompt">
-                            <button class="video-upload-btn" onclick="document.getElementById('video-input').click()">
-                                <span class="icon-placeholder">📁</span> Cargar Archivo de Video
-                            </button>
-                            <input type="file" id="video-input" hidden accept="video/*">
-                        </div>
-                        <video id="main-video" style="display:none; width:100%; height:100%; object-fit:contain;"></video>
-                    </div>
-
-                    <div class="video-controls">
-                        <button class="ctrl-btn" id="play-pause-btn">▶</button>
-                        <span class="time-display">00:00:00 / 00:05:30</span>
-                        <div class="scrubber">
-                            <div class="scrubber-fill" style="width: 35%;"></div>
-                        </div>
-                        <button class="ctrl-btn">🔊</button>
-                        <button class="ctrl-btn">⛶</button>
-                    </div>
+            <aside class="sidebar">
+                <div class="panel-section">
+                    <h3 class="panel-title">Herramientas de Video</h3>
+                    <button class="btn-action" onclick="document.getElementById('video-input').click()">
+                        📁 Cargar Video Nuevo
+                        <input type="file" id="video-input" hidden accept="video/*">
+                    </button>
+                    <button class="btn-action" id="add-text-btn">
+                        📝 Agregar Texto Dinámico
+                    </button>
+                    <button class="btn-action" onclick="document.getElementById('main-video').currentTime = 0">
+                        ⏮ Reiniciar Video
+                    </button>
                 </div>
-            </div>
+            </aside>
 
-            <div class="timeline-section">
-                <div class="timeline-header">
-                    <div class="timeline-tools">
-                        <button class="t-tool">↩️</button>
-                        <button class="t-tool">↪️</button>
-                        <button class="t-tool">✂️</button>
-                        <button class="t-tool">🗑️</button>
-                    </div>
-                    <div class="timeline-ruler"></div>
+            <div class="editor-center">
+                <div class="upload-area" id="video-upload-area" onclick="document.getElementById('video-input').click()">
+                    <h2>📥 Cargar Video</h2>
+                    <p>Haz clic para seleccionar un archivo MP4/WebM</p>
                 </div>
-                <div class="timeline-tracks">
-                    <div class="playhead"></div>
-                    
-                    <div class="track">
-                        <div class="track-info">
-                            <span class="icon-placeholder">🎬</span> Video Principal
-                        </div>
-                        <div class="track-content">
-                            <div class="clip video-clip">V_001_Mty.mp4</div>
-                        </div>
-                    </div>
 
-                    <div class="track">
-                        <div class="track-info">
-                            <span class="icon-placeholder">🎵</span> Audio / Voz
-                        </div>
-                        <div class="track-content">
-                            <div class="clip audio-clip">Voiceover_IA_Script.mp3</div>
-                        </div>
-                    </div>
+                <div class="video-wrapper" id="video-wrapper">
+                    <video id="main-video"></video>
+                </div>
 
-                    <div class="track">
-                        <div class="track-info">
-                            <span class="icon-placeholder">T</span> Subtítulos
-                        </div>
-                        <div class="track-content">
-                            <div class="clip text-clip">Capítulos...</div>
-                        </div>
+                <div class="video-controls" id="video-controls">
+                    <button class="ctrl-btn" id="play-pause-btn">▶</button>
+                    <span class="time-display" id="time-display">00:00 / 00:00</span>
+                    <div class="progress-bar" id="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
                     </div>
                 </div>
             </div>
         </section>
-
     </main>
 
-    <div class="floating-contact" id="contact-trigger" title="Soporte y Proyectos">
-        ✉️
-    </div>
-
-    <div class="modal-overlay" id="contact-modal">
-        <div class="modal-content">
-            <button class="close-modal" id="close-modal">✖</button>
-            <div class="modal-header">
-                <h2>Conecta con el Estudio</h2>
-                <p>Déjanos tus datos y describe el proyecto o fotografía que necesitas procesar. Nuestro motor automatizado está listo.</p>
-            </div>
-            <form id="auto-contact-form">
-                <div class="form-group">
-                    <label class="form-label">Nombre o Alias</label>
-                    <input type="text" class="form-control" required placeholder="Ej. Creador Digital">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" required placeholder="correo@ejemplo.com">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Descripción de la Necesidad / Proyecto</label>
-                    <textarea class="form-control" required placeholder="Ej. Necesito restaurar una foto de 1980 o editar un video automatizado..."></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Enviar al Sistema</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="toast-container" id="toast-container"></div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-            // 1. SISTEMA DE PESTAÑAS (TABS)
-            const tabBtns = document.querySelectorAll('.tab-btn');
-            const workspaces = document.querySelectorAll('.workspace');
-            const mainExportBtn = document.getElementById('main-export-btn');
-
-            tabBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // Remover active de todos
-                    tabBtns.forEach(b => b.classList.remove('active'));
-                    workspaces.forEach(w => w.classList.remove('active'));
-                    
-                    // Activar el seleccionado
-                    btn.classList.add('active');
-                    const targetId = btn.getAttribute('data-target');
-                    document.getElementById(targetId).classList.add('active');
-
-                    // Cambiar texto de botón de exportación según contexto
-                    if(targetId === 'photo-lab') {
-                        mainExportBtn.innerText = 'Descargar Imagen Alta Res.';
-                    } else {
-                        mainExportBtn.innerText = 'Exportar Video HD';
-                    }
-                });
-            });
-
-            // 2. LÓGICA DE FOTOGRAFÍA (DRAG & DROP Y EDICIÓN)
-            const photoDropzone = document.getElementById('photo-dropzone');
-            const photoInput = document.getElementById('photo-input');
-            const photoCanvasContainer = document.getElementById('photo-canvas-container');
-            const photoPreview = document.getElementById('photo-preview');
-
-            // Click para subir
-            photoDropzone.addEventListener('click', () => photoInput.click());
-
-            // Eventos Drag & Drop
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                photoDropzone.addEventListener(eventName, preventDefaults, false);
-            });
-
-            function preventDefaults(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-
-            ['dragenter', 'dragover'].forEach(eventName => {
-                photoDropzone.addEventListener(eventName, () => {
-                    photoDropzone.classList.add('dragover');
-                }, false);
-            });
-
-            ['dragleave', 'drop'].forEach(eventName => {
-                photoDropzone.addEventListener(eventName, () => {
-                    photoDropzone.classList.remove('dragover');
-                }, false);
-            });
-
-            photoDropzone.addEventListener('drop', (e) => {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                handlePhotoFiles(files);
-            }, false);
-
-            photoInput.addEventListener('change', function() {
-                handlePhotoFiles(this.files);
-            });
-
-            function handlePhotoFiles(files) {
-                if(files.length > 0) {
-                    const file = files[0];
-                    if(file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onload = function() {
-                            photoPreview.src = reader.result;
-                            photoDropzone.style.display = 'none';
-                            photoCanvasContainer.style.display = 'flex';
-                            showToast('Fotografía cargada en el laboratorio.');
-                        }
-                    }
-                }
-            }
-
-            // Filtros de Imagen (Simulación CSS)
-            window.setFilter = function(filterString) {
-                if(!photoPreview.src) return;
-                photoPreview.style.filter = filterString;
-                
-                // Efecto visual en UI
-                const items = document.querySelectorAll('.filter-item');
-                items.forEach(i => i.classList.remove('active'));
-                event.currentTarget.classList.add('active');
-            }
-
-            // Efectos IA Simulados
-            window.applyEffect = function(effectName) {
-                if(!photoPreview.src) {
-                    showToast('Por favor, carga una imagen primero.', 'error');
-                    return;
-                }
-                
-                showToast(`Aplicando algoritmo: ${effectName}... procesando en la nube.`);
-                
-                // Simular tiempo de carga y aplicar cambios sutiles
-                setTimeout(() => {
-                    if(effectName === 'restore') photoPreview.style.filter = 'contrast(1.1) brightness(1.05) saturate(1.1)';
-                    if(effectName === 'unscratch') photoPreview.style.filter = 'blur(0.5px) contrast(1.1)'; // Simulación rudimentaria
-                    if(effectName === 'colorize') photoPreview.style.filter = 'saturate(1.8) contrast(1.1)';
-                    if(effectName === 'upscale') photoPreview.style.transform = 'scale(1.02)';
-                    
-                    showToast(`Proceso completado con éxito.`);
-                }, 1500);
-            }
-
-            // 3. LÓGICA DE VIDEO (SIMULACIÓN BÁSICA)
-            const videoInput = document.getElementById('video-input');
-            const videoPrompt = document.getElementById('video-prompt');
-            const mainVideo = document.getElementById('main-video');
-            const playPauseBtn = document.getElementById('play-pause-btn');
-
-            videoInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if(file && file.type.startsWith('video/')) {
-                    const url = URL.createObjectURL(file);
-                    mainVideo.src = url;
-                    videoPrompt.style.display = 'none';
-                    mainVideo.style.display = 'block';
-                    showToast('Video cargado en la línea de tiempo.');
-                }
-            });
-
-            playPauseBtn.addEventListener('click', () => {
-                if(!mainVideo.src) return;
-                if(mainVideo.paused) {
-                    mainVideo.play();
-                    playPauseBtn.innerText = '⏸';
-                } else {
-                    mainVideo.pause();
-                    playPauseBtn.innerText = '▶';
-                }
-            });
-
-            // Acción principal de Exportación
-            mainExportBtn.addEventListener('click', () => {
-                showToast('Iniciando renderizado en alta resolución... Preparando descarga.');
-            });
-
-
-            // 4. SISTEMA DE CONTACTO AUTOMATIZADO
-            const contactTrigger = document.getElementById('contact-trigger');
-            const contactModal = document.getElementById('contact-modal');
-            const closeModal = document.getElementById('close-modal');
-            const contactForm = document.getElementById('auto-contact-form');
-
-            contactTrigger.addEventListener('click', () => {
-                contactModal.classList.add('active');
-            });
-
-            closeModal.addEventListener('click', () => {
-                contactModal.classList.remove('active');
-            });
-
-            // Cerrar al clickear fuera del contenido
-            contactModal.addEventListener('click', (e) => {
-                if(e.target === contactModal) {
-                    contactModal.classList.remove('active');
-                }
-            });
-
-            // Manejo del formulario (Simulando EmailJS)
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                // Lógica de simulación de envío
-                const btnSubmit = contactForm.querySelector('.btn-submit');
-                const originalText = btnSubmit.innerText;
-                btnSubmit.innerText = 'Procesando...';
-                btnSubmit.disabled = true;
-
-                setTimeout(() => {
-                    // Restaurar botón y cerrar modal
-                    btnSubmit.innerText = originalText;
-                    btnSubmit.disabled = false;
-                    contactModal.classList.remove('active');
-                    contactForm.reset();
-
-                    // Mensaje automático requerido por la instrucción
-                    showToast("Recibimos tu mensaje y tu necesidad. Nuestro sistema está listo para procesarlo.");
-                }, 1200);
-            });
-
-            // 5. SISTEMA DE TOASTS (Notificaciones UI)
-            function showToast(message, type = 'success') {
-                const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                
-                const icon = type === 'success' ? '✓' : '⚠';
-                const color = type === 'success' ? 'var(--accent-success)' : '#ef4444';
-                
-                toast.style.borderLeftColor = color;
-                toast.innerHTML = `<i style="color:${color}">${icon}</i> <span>${message}</span>`;
-                
-                container.appendChild(toast);
-                
-                // Animar entrada
-                requestAnimationFrame(() => {
-                    toast.classList.add('show');
-                });
-
-                // Remover después de 4 segundos
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                    setTimeout(() => {
-                        toast.remove();
-                    }, 400); // Esperar que termine la transición de salida
-                }, 4000);
-            }
-
-            // Inicialización UI
-            // Inicializar valores de sliders visualmente
-            const sliders = ['expo', 'cont', 'sharp'];
-            sliders.forEach(id => {
-                const input = document.getElementById(`slide-${id}`);
-                const display = document.getElementById(`val-${id}`);
-                if(input && display) {
-                    input.addEventListener('input', (e) => {
-                        display.innerText = e.target.value;
-                    });
-                }
+        // --- NAVEGACIÓN POR PESTAÑAS ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.workspace').forEach(w => w.classList.remove('active'));
+                e.target.classList.add('active');
+                document.getElementById(e.target.dataset.target).classList.add('active');
             });
         });
+
+        // ==========================================
+        // LÓGICA DE FOTOGRAFÍA FUNCIONAL
+        // ==========================================
+        const photoInput = document.getElementById('photo-input');
+        const photoUploadArea = document.getElementById('photo-upload-area');
+        const photoPreview = document.getElementById('photo-preview');
+        
+        // Carga real de la imagen usando URL temporal
+        photoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                photoPreview.src = URL.createObjectURL(file);
+                photoUploadArea.style.display = 'none';
+                photoPreview.style.display = 'block';
+                resetSliders();
+            }
+        });
+
+        // Motor de filtros CSS combinados en tiempo real
+        const sBright = document.getElementById('slide-bright');
+        const sCont = document.getElementById('slide-cont');
+        const sSat = document.getElementById('slide-sat');
+
+        function updateFilters() {
+            document.getElementById('val-bright').innerText = sBright.value + '%';
+            document.getElementById('val-cont').innerText = sCont.value + '%';
+            document.getElementById('val-sat').innerText = sSat.value + '%';
+            
+            photoPreview.style.filter = `brightness(${sBright.value}%) contrast(${sCont.value}%) saturate(${sSat.value}%)`;
+        }
+
+        [sBright, sCont, sSat].forEach(slider => {
+            slider.addEventListener('input', updateFilters);
+        });
+
+        function applyPreset(filterString) {
+            if(filterString === 'none') {
+                resetSliders();
+            } else {
+                photoPreview.style.filter = filterString;
+            }
+        }
+
+        function resetSliders() {
+            sBright.value = 100; sCont.value = 100; sSat.value = 100;
+            updateFilters();
+        }
+
+        // ==========================================
+        // LÓGICA DE VIDEO FUNCIONAL
+        // ==========================================
+        const videoInput = document.getElementById('video-input');
+        const videoUploadArea = document.getElementById('video-upload-area');
+        const videoWrapper = document.getElementById('video-wrapper');
+        const mainVideo = document.getElementById('main-video');
+        const videoControls = document.getElementById('video-controls');
+        
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const timeDisplay = document.getElementById('time-display');
+        const progressBar = document.getElementById('progress-bar');
+        const progressFill = document.getElementById('progress-fill');
+
+        // Formatear segundos a MM:SS
+        const formatTime = (seconds) => {
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+        };
+
+        // Carga real del video
+        videoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                mainVideo.src = URL.createObjectURL(file);
+                videoUploadArea.style.display = 'none';
+                videoWrapper.style.display = 'block';
+                videoControls.style.display = 'flex';
+                
+                // Limpiar textos dinámicos anteriores si se carga nuevo video
+                document.querySelectorAll('.overlay-text').forEach(el => el.remove());
+            }
+        });
+
+        // Play / Pause Funcional
+        playPauseBtn.addEventListener('click', () => {
+            if (mainVideo.paused) {
+                mainVideo.play();
+                playPauseBtn.innerText = '⏸';
+            } else {
+                mainVideo.pause();
+                playPauseBtn.innerText = '▶';
+            }
+        });
+
+        // Actualizar tiempo y barra de progreso
+        mainVideo.addEventListener('timeupdate', () => {
+            if(mainVideo.duration) {
+                const current = mainVideo.currentTime;
+                const duration = mainVideo.duration;
+                
+                timeDisplay.innerText = `${formatTime(current)} / ${formatTime(duration)}`;
+                progressFill.style.width = `${(current / duration) * 100}%`;
+            }
+        });
+
+        // Clic en la barra para adelantar/atrasar
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const percentage = clickX / width;
+            
+            mainVideo.currentTime = percentage * mainVideo.duration;
+        });
+
+        // Insertar Texto Dinámico Funcional
+        document.getElementById('add-text-btn').addEventListener('click', () => {
+            if(videoWrapper.style.display !== 'block') {
+                alert("Sube un video primero para agregar texto.");
+                return;
+            }
+            
+            const textEl = document.createElement('div');
+            textEl.contentEditable = true;
+            textEl.className = 'overlay-text';
+            textEl.innerText = "Escribe aquí...";
+            
+            // Para que no se active el play del video al hacer click en el texto
+            textEl.addEventListener('click', (e) => e.stopPropagation());
+            
+            videoWrapper.appendChild(textEl);
+            textEl.focus();
+        });
+
     </script>
 </body>
 </html>
