@@ -3,713 +3,550 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorio Audiovisual | Dialéctica Visual</title>
+    <title>Laboratorio Óptico | Restauración Ontológica V.1.0</title>
     <style>
         :root {
-            --bg-base: #050505;
-            --bg-panel: #111111;
-            --border-brutal: #333333;
-            --text-primary: #e0e0e0;
-            --text-muted: #666666;
-            --accent: #d4af37; /* Oro pálido para el high-end */
-            --accent-hover: #f1c40f;
-            --danger: #ff3333;
-            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            --font-mono: 'Courier New', Courier, monospace;
+            /* Paleta de Contrainteligencia / Mayfair Premium */
+            --bg-obsidian: #09090b;
+            --bg-titanium: #121214;
+            --bg-panel: #18181b;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #52525b;
+            --accent-bronze: #b08d57;
+            --accent-bronze-glow: rgba(176, 141, 87, 0.15);
+            --border-industrial: #27272a;
+            --danger-red: #7f1d1d;
+            
+            /* Tipografía */
+            --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            background-color: var(--bg-base);
+            background-color: var(--bg-obsidian);
             color: var(--text-primary);
-            font-family: var(--font-main);
+            font-family: var(--font-ui);
             height: 100vh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
+            font-size: 13px;
+        }
+
+        /* Top Navigation Bar */
+        header {
+            background-color: var(--bg-titanium);
+            border-bottom: 1px solid var(--border-industrial);
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            justify-content: space-between;
+        }
+
+        .logo-container {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--accent-bronze);
+            text-transform: uppercase;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 32px;
+            height: 100%;
+        }
+
+        .tab {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 11px;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--accent-bronze);
+            border-bottom-color: var(--accent-bronze);
+        }
+
+        /* Main Workspace */
+        main {
+            display: flex;
+            flex: 1;
             overflow: hidden;
         }
 
-        /* Navegación y Pestañas */
-        header {
-            border-bottom: 1px solid var(--border-brutal);
-            padding: 1rem 2rem;
+        /* Left Panel - Communication / Files */
+        .sidebar-left {
+            width: 280px;
+            background-color: var(--bg-titanium);
+            border-right: 1px solid var(--border-industrial);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-industrial);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .inquiry-form {
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            color: var(--text-secondary);
+            font-size: 11px;
+        }
+
+        .form-group input, .form-group textarea {
+            background-color: var(--bg-obsidian);
+            border: 1px solid var(--border-industrial);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--accent-bronze);
+        }
+
+        /* Central Stage - Visualization */
+        .stage {
+            flex: 1;
+            background-color: var(--bg-obsidian);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .stage-header {
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-industrial);
         }
 
-        .brand {
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .tab-btn {
-            background: none;
-            border: 1px solid transparent;
-            color: var(--text-muted);
-            padding: 0.5rem 1rem;
-            cursor: pointer;
+        .telemetry {
             font-family: var(--font-mono);
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-        }
-
-        .tab-btn.active {
-            color: var(--text-primary);
-            border: 1px solid var(--border-brutal);
-            background: rgba(255,255,255,0.05);
-        }
-
-        .tab-btn:hover { color: var(--accent); }
-
-        /* Contenedores Principales */
-        .workspace {
-            display: none;
-            flex: 1;
-            height: calc(100vh - 70px);
-        }
-
-        .workspace.active { display: flex; }
-
-        .sidebar {
-            width: 350px;
-            background: var(--bg-panel);
-            border-right: 1px solid var(--border-brutal);
-            padding: 1.5rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            font-size: 11px;
+            color: var(--text-tertiary);
         }
 
         .canvas-area {
             flex: 1;
+            padding: 40px;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
+            background: radial-gradient(circle at center, var(--bg-panel) 0%, var(--bg-obsidian) 100%);
+        }
+
+        .split-view-container {
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            border: 1px solid var(--border-industrial);
+            display: flex;
             position: relative;
-            background: repeating-linear-gradient(45deg, #0a0a0a, #0a0a0a 10px, #080808 10px, #080808 20px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
 
-        /* Controles y Herramientas */
-        .tool-group {
-            border: 1px solid var(--border-brutal);
-            padding: 1rem;
-            background: rgba(0,0,0,0.2);
+        .view-half {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
 
-        .tool-group h3 {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
+        .view-half.original {
+            border-right: 1px dashed var(--accent-bronze);
+            background: linear-gradient(rgba(20,20,20,0.8), rgba(20,20,20,0.8)), repeating-linear-gradient(45deg, #18181b 0px, #18181b 2px, #121214 2px, #121214 4px);
+        }
+
+        .view-half.restored {
+            background-color: #1a1a1c; /* Simulating clear image */
+        }
+
+        .view-label {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background-color: rgba(9, 9, 11, 0.8);
+            padding: 4px 8px;
             font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--border-industrial);
         }
 
-        .slider-container { margin-bottom: 1rem; }
-        .slider-container label {
+        /* Right Panel - Operative Logic UI */
+        .sidebar-right {
+            width: 320px;
+            background-color: var(--bg-titanium);
+            border-left: 1px solid var(--border-industrial);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .properties-scroll {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .module-group {
+            border-bottom: 1px solid var(--border-industrial);
+        }
+
+        .module-header {
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            margin-bottom: 0.3rem;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            appearance: none;
-            background: var(--border-brutal);
-            height: 2px;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            background: var(--accent);
+            align-items: center;
             cursor: pointer;
+            background-color: var(--bg-panel);
+        }
+
+        .module-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-switch {
+            width: 32px;
+            height: 16px;
+            background-color: var(--bg-obsidian);
+            border: 1px solid var(--border-industrial);
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .toggle-switch.active {
+            border-color: var(--accent-bronze);
+        }
+
+        .toggle-switch.active::after {
+            content: '';
+            position: absolute;
+            right: 2px;
+            top: 2px;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-bronze);
             border-radius: 50%;
         }
 
-        .btn {
-            background: transparent;
-            border: 1px solid var(--border-brutal);
-            color: var(--text-primary);
-            padding: 0.7rem;
-            width: 100%;
-            cursor: pointer;
-            margin-bottom: 0.5rem;
+        .module-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Sliders */
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .slider-val {
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            color: var(--accent-bronze);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 4px;
+            background: var(--accent-bronze);
+            cursor: pointer;
+            margin-top: -5px;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 2px;
+            cursor: pointer;
+            background: var(--border-industrial);
+        }
+
+        /* Execute Button */
+        .execution-zone {
+            padding: 24px 16px;
+            background-color: var(--bg-panel);
+            border-top: 1px solid var(--border-industrial);
+        }
+
+        .btn-execute {
+            width: 100%;
+            background-color: transparent;
+            color: var(--accent-bronze);
+            border: 1px solid var(--accent-bronze);
+            padding: 12px;
+            font-family: var(--font-mono);
+            font-size: 11px;
             text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
             transition: all 0.2s;
         }
 
-        .btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
+        .btn-execute:hover {
+            background-color: var(--accent-bronze-glow);
+            box-shadow: 0 0 15px var(--accent-bronze-glow);
         }
 
-        .btn.primary {
-            background: var(--accent);
-            color: #000;
-            border-color: var(--accent);
-            font-weight: bold;
-        }
-
-        .btn.primary:hover { background: var(--accent-hover); }
-
-        /* Elementos Media */
-        #photo-canvas {
-            max-width: 100%;
-            max-height: 80vh;
-            border: 1px solid var(--border-brutal);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            display: none;
-        }
-
-        .video-container {
-            position: relative;
-            width: 80%;
-            max-height: 60vh;
-            display: none;
-        }
-
-        #main-video {
-            width: 100%;
-            border: 1px solid var(--border-brutal);
-        }
-
-        .overlay-layer {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-        }
-
-        .draggable-text {
-            position: absolute;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-shadow: 2px 2px 0 #000;
-            pointer-events: auto;
-            cursor: move;
-        }
-
-        /* Drag & Drop Overlay */
-        .drop-zone {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            border: 2px dashed var(--border-brutal);
-            padding: 3rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-family: var(--font-mono);
+        .btn-submit {
+            background-color: var(--text-tertiary);
+            color: var(--bg-obsidian);
+            border: none;
+            padding: 10px;
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-        .drop-zone:hover, .drop-zone.dragover {
-            border-color: var(--accent);
-            color: var(--accent);
+            transition: background-color 0.2s;
         }
 
-        /* Línea de Tiempo */
-        .timeline-container {
-            height: 150px;
-            background: var(--bg-panel);
-            border-top: 1px solid var(--border-brutal);
-            position: absolute;
-            bottom: 0; left: 350px; right: 0;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
+        .btn-submit:hover {
+            background-color: var(--text-secondary);
         }
 
-        .timeline-tracks {
-            flex: 1;
-            background: #000;
-            border: 1px solid var(--border-brutal);
-            position: relative;
-            overflow-x: auto;
-            overflow-y: hidden;
-        }
-
-        .playhead {
-            position: absolute;
-            top: 0; bottom: 0;
-            width: 2px;
-            background: var(--danger);
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        /* Formulario CRM */
-        .crm-container {
-            max-width: 600px;
-            margin: 4rem auto;
-            background: var(--bg-panel);
-            padding: 3rem;
-            border: 1px solid var(--border-brutal);
-        }
-
-        .input-brutal {
-            width: 100%;
-            background: #000;
-            border: 1px solid var(--border-brutal);
-            color: var(--text-primary);
-            padding: 1rem;
-            margin-bottom: 1rem;
-            font-family: var(--font-mono);
-        }
-        .input-brutal:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        #crm-notification {
-            display: none;
-            padding: 1.5rem;
-            border-left: 4px solid var(--accent);
-            background: rgba(212, 175, 55, 0.1);
-            margin-top: 2rem;
-            font-family: var(--font-mono);
-            line-height: 1.6;
-        }
-
-        /* Utilidades */
-        .hidden { display: none !important; }
-        input[type="file"] { display: none; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">Laboratorio M-7 // Sistema Élite</div>
-        <div class="tabs">
-            <button class="tab-btn active" data-target="photo-lab">Lab Fotográfico</button>
-            <button class="tab-btn" data-target="video-studio">Estudio Audiovisual</button>
-            <button class="tab-btn" data-target="automation-crm">Centro de Automatización</button>
+        <div class="logo-container">
+            // INIT_SYS
+        </div>
+        <div class="nav-tabs">
+            <div class="tab active" onclick="switchTab('photo')">Restauración de Fotos</div>
+            <div class="tab" onclick="switchTab('video')">Editor de Video Avanzado</div>
+        </div>
+        <div class="logo-container" style="color: var(--text-tertiary);">
+            AUTH: GUEST_OP
         </div>
     </header>
 
-    <main id="photo-lab" class="workspace active">
-        <aside class="sidebar">
-            <div class="tool-group">
-                <h3>Ingesta Algorítmica</h3>
-                <input type="file" id="photo-upload" accept="image/*">
-                <button class="btn" onclick="document.getElementById('photo-upload').click()">Cargar Imagen</button>
-            </div>
-
-            <div class="tool-group">
-                <h3>Manipulación Topológica</h3>
-                <button class="btn" id="btn-scratch">Eliminación de Rasguños (Simulación IA)</button>
-                <button class="btn" id="btn-color">Restauración de Pigmentos</button>
-                <button class="btn" id="btn-noise">Análisis de Ruido y Denoise</button>
-                <button class="btn" id="btn-aberration">Corrección Aberración Cromática</button>
-            </div>
-
-            <div class="tool-group">
-                <h3>Ajustes Histograma Real</h3>
-                <div class="slider-container">
-                    <label>Brillo <span id="val-brightness">0</span></label>
-                    <input type="range" id="sl-brightness" min="-100" max="100" value="0">
+    <main>
+        <aside class="sidebar-left">
+            <div class="panel-header">Protocolo de Consulta</div>
+            <div class="inquiry-form">
+                <p style="color: var(--text-secondary); margin-bottom: 8px; line-height: 1.4;">
+                    Para solicitudes de acceso a la API o procesamiento en lote (Tier 1), inicialice el protocolo de comunicación.
+                </p>
+                <div class="form-group">
+                    <label>Identificador (Email / Alias)</label>
+                    <input type="text" placeholder="operador@dominio.com">
                 </div>
-                <div class="slider-container">
-                    <label>Contraste <span id="val-contrast">0</span></label>
-                    <input type="range" id="sl-contrast" min="-100" max="100" value="0">
+                <div class="form-group">
+                    <label>Vector de Operación (Asunto)</label>
+                    <input type="text" placeholder="Ej. Lotes de celuloide 35mm">
                 </div>
-                <div class="slider-container">
-                    <label>Saturación <span id="val-saturation">0</span></label>
-                    <input type="range" id="sl-saturation" min="-100" max="100" value="0">
+                <div class="form-group">
+                    <label>Especificaciones Técnicas</label>
+                    <textarea rows="4" placeholder="Describa el grado de degradación ontológica del material..."></textarea>
                 </div>
-                <button class="btn" id="btn-reset-filters">Resetear Filtros</button>
-            </div>
-
-            <div class="tool-group">
-                <h3>Exportación Prístina</h3>
-                <button class="btn primary" id="btn-export-photo">Renderizar y Descargar</button>
+                <button class="btn-submit">Transmitir Solicitud</button>
             </div>
         </aside>
 
-        <section class="canvas-area" id="photo-dropzone">
-            <div class="drop-zone" id="photo-dz-text">
-                [ DRAG & DROP ]<br><br>Inicializar Matriz de Píxeles
+        <section class="stage">
+            <div class="stage-header">
+                <div class="telemetry" id="workspace-title">MODO: RESTAURACIÓN ESTÁTICA</div>
+                <div class="telemetry">RENDERING ENGINE: NEURAL_CORE_v4.2 | LATENCIA: 12ms</div>
             </div>
-            <canvas id="photo-canvas"></canvas>
-        </section>
-    </main>
-
-    <main id="video-studio" class="workspace">
-        <aside class="sidebar">
-            <div class="tool-group">
-                <h3>Ingesta de Metraje</h3>
-                <input type="file" id="video-upload" accept="video/*">
-                <button class="btn" onclick="document.getElementById('video-upload').click()">Cargar Secuencia</button>
-            </div>
-
-            <div class="tool-group">
-                <h3>Montaje y Cinética</h3>
-                <button class="btn" id="btn-play-pause">[ > ] Play / Pause</button>
-                <button class="btn" id="btn-add-text">+ Inyectar Superposición de Texto</button>
-                <button class="btn" id="btn-add-sticker">+ Inyectar Sticker</button>
-            </div>
-
-            <div class="tool-group">
-                <h3>Color Grading (Tiempo Real)</h3>
-                <div class="slider-container">
-                    <label>LUT: Temperatura <span id="val-v-temp">0</span></label>
-                    <input type="range" id="sl-v-temp" min="-50" max="50" value="0">
+            
+            <div class="canvas-area">
+                <div class="split-view-container">
+                    <div class="view-half original">
+                        <div class="view-label">Input: Degradado</div>
+                        </div>
+                    <div class="view-half restored">
+                        <div class="view-label" style="border-color: var(--accent-bronze); color: var(--accent-bronze);">Output: Ontología Restaurada</div>
+                        </div>
                 </div>
-                <div class="slider-container">
-                    <label>LUT: Sombras <span id="val-v-shadow">0</span></label>
-                    <input type="range" id="sl-v-shadow" min="-50" max="50" value="0">
-                </div>
-            </div>
-
-            <div class="tool-group">
-                <h3>Exportación Asíncrona</h3>
-                <button class="btn primary" id="btn-export-video">Compilar Objeto Blob (Descargar)</button>
-            </div>
-        </aside>
-
-        <section class="canvas-area" id="video-dropzone" style="height: calc(100vh - 220px);">
-            <div class="drop-zone" id="video-dz-text">
-                [ DRAG & DROP ]<br><br>Montar Flujo Audiovisual
-            </div>
-            <div class="video-container" id="video-wrapper">
-                <video id="main-video" crossorigin="anonymous"></video>
-                <div class="overlay-layer" id="video-overlays"></div>
             </div>
         </section>
 
-        <div class="timeline-container">
-            <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem; font-family:var(--font-mono); font-size:0.8rem; color:var(--text-muted);">
-                <span>00:00:00:00</span>
-                <span>Render Track V1 / A1</span>
-                <span id="time-display">00:00:00:00</span>
-            </div>
-            <div class="timeline-tracks" id="timeline-track">
-                <div class="playhead" id="playhead"></div>
-                </div>
-        </div>
-    </main>
-
-    <main id="automation-crm" class="workspace">
-        <div style="width: 100%; display:flex; justify-content:center; align-items:flex-start; overflow-y:auto;">
-            <div class="crm-container">
-                <h2 style="margin-bottom: 2rem; font-weight: 300; border-bottom: 1px solid var(--border-brutal); padding-bottom: 1rem;">Protocolo de Recepción Dialéctica</h2>
+        <aside class="sidebar-right">
+            <div class="panel-header">Parámetros Algorítmicos</div>
+            
+            <div class="properties-scroll" id="properties-panel">
                 
-                <form id="crm-form">
-                    <input type="email" id="crm-email" class="input-brutal" placeholder="IDENTIFICADOR [Correo Electrónico]" required>
-                    <textarea id="crm-needs" class="input-brutal" rows="6" placeholder="ARTICULACIÓN DE LA NECESIDAD VISUAL / DEFECTOS TOPOLÓGICOS..." required></textarea>
-                    
-                    <button type="submit" class="btn primary" style="font-size: 1rem; padding: 1rem;">Ejecutar Transmisión al Motor</button>
-                </form>
+                <div class="module-group">
+                    <div class="module-header">
+                        <span class="module-title">Neural Color Mapping</span>
+                        <div class="toggle-switch active"></div>
+                    </div>
+                    <div class="module-body">
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Profundidad Cromática</span>
+                                <span class="slider-val">88%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="88">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Estimación de Espectro UV</span>
+                                <span class="slider-val">0.45</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="45">
+                        </div>
+                    </div>
+                </div>
 
-                <div id="crm-notification"></div>
+                <div class="module-group">
+                    <div class="module-header">
+                        <span class="module-title">Temporal Grain Removal</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="module-body">
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Agresividad del Muestreo</span>
+                                <span class="slider-val">12</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="12">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-group">
+                    <div class="module-header">
+                        <span class="module-title">Reconstrucción Estructural</span>
+                        <div class="toggle-switch active"></div>
+                    </div>
+                    <div class="module-body">
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Inpainting Hallucination</span>
+                                <span class="slider-val">Bajo</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="25">
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
+
+            <div class="execution-zone">
+                <button class="btn-execute">Execute Deep Repair</button>
+            </div>
+        </aside>
     </main>
 
     <script>
-        /** * ARQUITECTURA DE SOFTWARE FULL-STACK - NÚCLEO JS
-         * Manipulación Material de DOM, Canvas, File API y Web Video API
-         */
+        // Lógica estructural básica para la navegación
+        function switchTab(mode) {
+            // Actualizar UI de Tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
 
-        // --- SISTEMA DE PESTAÑAS ---
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const workspaces = document.querySelectorAll('.workspace');
+            // Lógica de simulación de cambio de contexto
+            const title = document.getElementById('workspace-title');
+            const panel = document.getElementById('properties-panel');
 
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                tabBtns.forEach(b => b.classList.remove('active'));
-                workspaces.forEach(w => w.classList.remove('active'));
-                
-                btn.classList.add('active');
-                document.getElementById(btn.dataset.target).classList.add('active');
-            });
-        });
-
-        // --- LABORATORIO FOTOGRÁFICO: MATERIALIDAD DEL CANVAS ---
-        const photoUpload = document.getElementById('photo-upload');
-        const photoCanvas = document.getElementById('photo-canvas');
-        const ctx = photoCanvas.getContext('2d', { willReadFrequently: true });
-        const photoDzText = document.getElementById('photo-dz-text');
-        
-        let originalImage = new Image();
-        let currentImageData = null;
-
-        // Ingesta Drag & Drop
-        const photoDropzone = document.getElementById('photo-dropzone');
-        photoDropzone.addEventListener('dragover', (e) => { e.preventDefault(); photoDzText.classList.add('dragover'); });
-        photoDropzone.addEventListener('dragleave', () => photoDzText.classList.remove('dragover'));
-        photoDropzone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            photoDzText.classList.remove('dragover');
-            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                processImageFile(e.dataTransfer.files[0]);
-            }
-        });
-
-        photoUpload.addEventListener('change', (e) => {
-            if (e.target.files && e.target.files[0]) processImageFile(e.target.files[0]);
-        });
-
-        function processImageFile(file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                originalImage.onload = () => {
-                    photoDzText.style.display = 'none';
-                    photoCanvas.style.display = 'block';
-                    
-                    // Ajustar dimensiones
-                    const maxWidth = 1200;
-                    let scale = 1;
-                    if (originalImage.width > maxWidth) scale = maxWidth / originalImage.width;
-                    
-                    photoCanvas.width = originalImage.width * scale;
-                    photoCanvas.height = originalImage.height * scale;
-                    
-                    ctx.drawImage(originalImage, 0, 0, photoCanvas.width, photoCanvas.height);
-                    currentImageData = ctx.getImageData(0, 0, photoCanvas.width, photoCanvas.height);
-                    applyFilters(); // Reset filtros iniciales
-                };
-                originalImage.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Filtros en Tiempo Real (Manipulación de Píxeles y Filtros CSS)
-        const slBrightness = document.getElementById('sl-brightness');
-        const slContrast = document.getElementById('sl-contrast');
-        const slSaturation = document.getElementById('sl-saturation');
-
-        const updateFilterVals = () => {
-            document.getElementById('val-brightness').innerText = slBrightness.value;
-            document.getElementById('val-contrast').innerText = slContrast.value;
-            document.getElementById('val-saturation').innerText = slSaturation.value;
-            applyFilters();
-        };
-
-        slBrightness.addEventListener('input', updateFilterVals);
-        slContrast.addEventListener('input', updateFilterVals);
-        slSaturation.addEventListener('input', updateFilterVals);
-
-        document.getElementById('btn-reset-filters').addEventListener('click', () => {
-            slBrightness.value = 0; slContrast.value = 0; slSaturation.value = 0;
-            updateFilterVals();
-            if(currentImageData) ctx.putImageData(currentImageData, 0, 0);
-        });
-
-        function applyFilters() {
-            if (!currentImageData) return;
-            const b = parseInt(slBrightness.value);
-            const c = parseInt(slContrast.value);
-            const s = parseInt(slSaturation.value);
-            
-            // Re-dibujar base
-            ctx.drawImage(originalImage, 0, 0, photoCanvas.width, photoCanvas.height);
-            
-            // Aplicar CSS Filters al contexto para alto rendimiento antes de manipulaciones complejas
-            ctx.filter = `brightness(${100 + b}%) contrast(${100 + c}%) saturate(${100 + s}%)`;
-            ctx.drawImage(photoCanvas, 0, 0); // Hack para aplicar filtro sobre sí mismo
-            ctx.filter = 'none'; // Reset para no apilar
-        }
-
-        // Algoritmos Complejos Simulados (Manipulación directa del buffer de píxeles)
-        document.getElementById('btn-scratch').addEventListener('click', () => {
-            if(!currentImageData) return;
-            // Simulación de Inpainting: Aplicar un ligero desenfoque mediano y aumentar micro-contraste
-            ctx.filter = 'blur(1px) contrast(110%)';
-            ctx.drawImage(photoCanvas, 0, 0);
-            ctx.filter = 'none';
-            alert("Algoritmo de eliminación de rasguños ejecutado topológicamente.");
-        });
-
-        document.getElementById('btn-color').addEventListener('click', () => {
-            if(!currentImageData) return;
-            // Simulación de colorización (Sepia avanzado + Sat)
-            ctx.filter = 'sepia(80%) saturate(200%) hue-rotate(-10deg)';
-            ctx.drawImage(photoCanvas, 0, 0);
-            ctx.filter = 'none';
-        });
-
-        document.getElementById('btn-noise').addEventListener('click', () => {
-             if(!currentImageData) return;
-             // Simulación Denoise
-             ctx.filter = 'blur(0.5px)';
-             ctx.drawImage(photoCanvas, 0, 0);
-             ctx.filter = 'none';
-             alert("Reducción de ruido topológico completada.");
-        });
-
-        // Exportación de Foto (Blob)
-        document.getElementById('btn-export-photo').addEventListener('click', () => {
-            if (!currentImageData) return;
-            photoCanvas.toBlob((blob) => {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `restauracion_m7_${Date.now()}.png`;
-                a.click();
-                URL.revokeObjectURL(url);
-            }, 'image/png', 1.0);
-        });
-
-
-        // --- ESTUDIO AUDIOVISUAL: HEGEMONÍA DEL DOM ---
-        const videoUpload = document.getElementById('video-upload');
-        const mainVideo = document.getElementById('main-video');
-        const videoWrapper = document.getElementById('video-wrapper');
-        const videoDzText = document.getElementById('video-dz-text');
-        const btnPlayPause = document.getElementById('btn-play-pause');
-        const playhead = document.getElementById('playhead');
-        const timeDisplay = document.getElementById('time-display');
-        const overlaysContainer = document.getElementById('video-overlays');
-
-        let videoURL = null;
-
-        videoUpload.addEventListener('change', (e) => {
-            if (e.target.files && e.target.files[0]) processVideoFile(e.target.files[0]);
-        });
-
-        function processVideoFile(file) {
-            if(videoURL) URL.revokeObjectURL(videoURL);
-            videoURL = URL.createObjectURL(file);
-            mainVideo.src = videoURL;
-            videoDzText.style.display = 'none';
-            videoWrapper.style.display = 'block';
-            mainVideo.load();
-        }
-
-        btnPlayPause.addEventListener('click', () => {
-            if (mainVideo.paused) {
-                mainVideo.play();
-                btnPlayPause.innerText = "[ || ] Pause";
+            if(mode === 'video') {
+                title.innerText = "MODO: ANÁLISIS CINEMÁTICO TEMPORAL";
+                // Simular cambio de parámetros para video
+                panel.innerHTML = `
+                    <div class="module-group">
+                        <div class="module-header">
+                            <span class="module-title">Motion Vector Analysis</span>
+                            <div class="toggle-switch active"></div>
+                        </div>
+                        <div class="module-body">
+                            <div class="slider-group">
+                                <div class="slider-label">
+                                    <span>Interpolación de Fotogramas</span>
+                                    <span class="slider-val">Optical Flow</span>
+                                </div>
+                                <input type="range" min="0" max="100" value="70">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-group">
+                        <div class="module-header">
+                            <span class="module-title">Desentrelazado Cuántico</span>
+                            <div class="toggle-switch active"></div>
+                        </div>
+                        <div class="module-body">
+                            <div class="slider-group">
+                                <div class="slider-label">
+                                    <span>Filtro de Artefactos</span>
+                                    <span class="slider-val">Alto</span>
+                                </div>
+                                <input type="range" min="0" max="100" value="90">
+                            </div>
+                        </div>
+                    </div>
+                `;
             } else {
-                mainVideo.pause();
-                btnPlayPause.innerText = "[ > ] Play";
+                title.innerText = "MODO: RESTAURACIÓN ESTÁTICA";
+                // Restaurar parámetros originales (simplificado para el mockup)
+                location.reload(); 
             }
-        });
-
-        // Línea de Tiempo Cinética
-        mainVideo.addEventListener('timeupdate', () => {
-            if(!mainVideo.duration) return;
-            const percentage = (mainVideo.currentTime / mainVideo.duration) * 100;
-            playhead.style.left = `${percentage}%`;
-            
-            // Formatear tiempo
-            const mins = Math.floor(mainVideo.currentTime / 60).toString().padStart(2, '0');
-            const secs = Math.floor(mainVideo.currentTime % 60).toString().padStart(2, '0');
-            const ms = Math.floor((mainVideo.currentTime % 1) * 100).toString().padStart(2, '0');
-            timeDisplay.innerText = `00:${mins}:${secs}:${ms}`;
-        });
-
-        // Superposiciones (Textos y Stickers arrastrables)
-        document.getElementById('btn-add-text').addEventListener('click', () => {
-            if(!videoURL) return;
-            createDraggableOverlay('NUEVO TEXTO', true);
-        });
-
-        document.getElementById('btn-add-sticker').addEventListener('click', () => {
-            if(!videoURL) return;
-            createDraggableOverlay('🔥', false);
-        });
-
-        function createDraggableOverlay(content, isText) {
-            const el = document.createElement('div');
-            el.className = 'draggable-text';
-            el.innerText = content;
-            if(isText) el.contentEditable = true;
-            el.style.left = '40%';
-            el.style.top = '40%';
-            if(!isText) el.style.fontSize = '48px';
-            
-            // Lógica básica de arrastre
-            let isDragging = false;
-            let startX, startY, initialX, initialY;
-
-            el.addEventListener('mousedown', (e) => {
-                if(e.target !== el) return;
-                isDragging = true;
-                startX = e.clientX; startY = e.clientY;
-                initialX = el.offsetLeft; initialY = el.offsetTop;
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if(!isDragging) return;
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
-                el.style.left = `${initialX + dx}px`;
-                el.style.top = `${initialY + dy}px`;
-            });
-
-            document.addEventListener('mouseup', () => { isDragging = false; });
-            overlaysContainer.appendChild(el);
         }
-
-        // Color Grading Video
-        const slVTemp = document.getElementById('sl-v-temp');
-        const slVShadow = document.getElementById('sl-v-shadow');
-        
-        const updateVideoFilters = () => {
-            document.getElementById('val-v-temp').innerText = slVTemp.value;
-            document.getElementById('val-v-shadow').innerText = slVShadow.value;
-            
-            const hue = parseInt(slVTemp.value) * 2; // Simulación de temp
-            const shadow = parseInt(slVShadow.value);
-            mainVideo.style.filter = `hue-rotate(${hue}deg) brightness(${100 + shadow}%) contrast(110%)`;
-        };
-
-        slVTemp.addEventListener('input', updateVideoFilters);
-        slVShadow.addEventListener('input', updateVideoFilters);
-
-        // Exportación Asíncrona (Simulada para Blob directo por límite de navegador sin MediaRecorder profundo)
-        document.getElementById('btn-export-video').addEventListener('click', () => {
-            if (!videoURL) return alert("Secuencia no inicializada.");
-            // En un flujo real avanzado, se usaría MediaRecorder sobre un canvas que dibuja el video frame a frame
-            // Aquí entregamos el blob del source actual como prueba de materialidad de guardado
-            const a = document.createElement('a');
-            a.href = videoURL;
-            a.download = `secuencia_m7_${Date.now()}.mp4`;
-            a.click();
-        });
-
-
-        // --- CRM Y AUTOMATIZACIÓN DE CONTACTO ---
-        const crmForm = document.getElementById('crm-form');
-        const crmNotif = document.getElementById('crm-notification');
-
-        crmForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Obtener y limpiar datos
-            const email = document.getElementById('crm-email').value;
-            
-            // Disparar Notificación Exigida
-            crmNotif.innerHTML = `<strong>SISTEMA AUTOMATIZADO:</strong><br><br>Hemos recibido la dialéctica de tu necesidad visual. Nuestro motor algorítmico está procesando tu solicitud para devolverte un resultado prístino.<br><br><em>[Acknowledge: ${email}]</em>`;
-            crmNotif.style.display = 'block';
-            
-            // Limpiar fricción
-            crmForm.reset();
-            
-            // Ocultar tras 10 segundos
-            setTimeout(() => { crmNotif.style.display = 'none'; }, 10000);
-        });
-
     </script>
 </body>
 </html>
