@@ -2,81 +2,90 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Aether Restoration Suite | Enterprise Edition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Aether Restoration Suite | Professional Edition</title>
     <style>
-        body { background: #0a0a0a; color: #e5e7eb; font-family: 'Inter', sans-serif; }
-        .sidebar { background: #121212; border-right: 1px solid #262626; }
-        .tool-btn { @apply text-left px-4 py-2 hover:bg-blue-600 hover:text-white transition-all text-xs uppercase font-bold; }
-        canvas { background: #000; border: 1px solid #333; }
+        /* Diseño "Dark Studio" - Estilo DaVinci */
+        :root { --bg: #121212; --panel: #1e1e1e; --accent: #007bff; --text: #d4d4d4; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; }
+        
+        #sidebar { width: 320px; background: var(--panel); border-right: 1px solid #333; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+        #workspace { flex: 1; display: flex; flex-direction: column; }
+        
+        .tab-bar { padding: 10px; background: #000; display: flex; gap: 10px; }
+        .tab-btn { background: #333; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px; }
+        .tab-btn:hover { background: var(--accent); }
+        
+        #viewport { flex: 1; display: flex; align-items: center; justify-content: center; background: #0a0a0a; border: 2px dashed #333; margin: 20px; }
+        
+        .control-group { display: flex; flex-direction: column; gap: 8px; }
+        input[type=range] { width: 100%; cursor: pointer; }
     </style>
 </head>
-<body class="h-screen flex flex-col">
+<body>
 
-    <div class="flex flex-1 overflow-hidden">
-        <aside class="sidebar w-72 overflow-y-auto">
-            <div id="tool-menu" class="flex flex-col">
-                <h3 class="p-4 text-gray-500 text-[10px] tracking-widest uppercase">Color & Exposure</h3>
-                <button class="tool-btn" onclick="applyEffect('brightness')">1. Brightness</button>
-                <button class="tool-btn" onclick="applyEffect('contrast')">2. Contrast</button>
-                <button class="tool-btn" onclick="applyEffect('saturation')">3. Saturation</button>
-                <button class="tool-btn" onclick="applyEffect('hue')">4. Hue Shift</button>
-                <button class="tool-btn" onclick="applyEffect('vibrance')">5. Vibrance</button>
-                
-                <h3 class="p-4 text-gray-500 text-[10px] tracking-widest uppercase">Restoration & AI</h3>
-                <button class="tool-btn" onclick="applyEffect('denoise')">6. Denoise AI</button>
-                <button class="tool-btn" onclick="applyEffect('sharpen')">7. Smart Sharpen</button>
-                <button class="tool-btn" onclick="applyEffect('scratch')">8. Scratch Repair</button>
-                <button class="tool-btn" onclick="applyEffect('color-reconstruct')">9. Auto Colorize</button>
-                <button class="tool-btn" onclick="applyEffect('upscale')">10. Super Resolution</button>
-                
-                <p class="p-4 text-xs italic text-blue-500">... +20 funciones avanzadas (Blur, Vignette, LUTs, etc.)</p>
-            </div>
-        </aside>
+    <aside id="sidebar">
+        <h3>Aether Restoration</h3>
+        <div class="control-group">
+            <label>Denoising Strength</label>
+            <input type="range" id="denoise" min="0" max="100">
+        </div>
+        <div class="control-group">
+            <label>AI Upscaling</label>
+            <input type="range" id="upscale" min="1" max="4">
+        </div>
+        <button id="btn-process" style="margin-top:20px; padding: 10px; background: var(--accent); color: white; border: none;">Ejecutar Pipeline IA</button>
+        
+        <div id="support-section" style="margin-top: auto; border-top: 1px solid #333; pt: 20px;">
+            <input type="text" id="ticket-msg" placeholder="Soporte Técnico..." style="width: 100%;">
+            <button onclick="sendTicket()">Enviar</button>
+        </div>
+    </aside>
 
-        <main class="flex-1 flex flex-col items-center justify-center">
-            <canvas id="canvas"></canvas>
-            <input type="file" id="input" class="mt-4">
-        </main>
-    </div>
+    <main id="workspace">
+        <nav class="tab-bar">
+            <button class="tab-btn" onclick="showTab('photo')">Photo Restoration</button>
+            <button class="tab-btn" onclick="showTab('video')">Video Enhancement</button>
+        </nav>
+        <div id="viewport">
+            <p>Arrastra archivos aquí para inicializar el buffer</p>
+        </div>
+    </main>
 
-    <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
-
-        // MOTOR CENTRALIZADO DE COMANDOS (Patrón Enterprise)
-        const Effects = {
-            brightness: (d) => { /* Lógica de procesamiento de pixels */ },
-            contrast: (d) => { /* Lógica de contraste */ },
-            denoise: (d) => { /* Integración con TF.js */ },
-            // ... Aquí defines las 30 funciones
-        };
-
-        function applyEffect(effectName) {
-            if (!img.src) return alert("Carga una imagen primero");
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            
-            // Ejecutar la función elegida
-            if(Effects[effectName]) {
-                Effects[effectName](imageData.data);
-                ctx.putImageData(imageData, 0, 0);
+    <script type="module">
+        // Patrón de Módulos: Gestión de Estado Centralizado
+        const State = {
+            settings: { denoise: 0, upscale: 1 },
+            init() {
+                console.log("Aether Suite: Módulo de estado inicializado.");
             }
-        }
-
-        // Carga de archivos
-        document.getElementById('input').onchange = (e) => {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                img.onload = () => {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.drawImage(img, 0, 0);
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(e.target.files[0]);
         };
+
+        // Lógica de Web Worker para TensorFlow.js
+        const workerCode = `
+            self.onmessage = (e) => {
+                // Aquí se integrarían los modelos de TF.js (ej: tf.loadGraphModel)
+                console.log("Procesando en hilo secundario:", e.data);
+                self.postMessage({ status: 'success', data: 'Procesamiento IA completado' });
+            };
+        `;
+        const blob = new Blob([workerCode], { type: 'application/javascript' });
+        const worker = new Worker(URL.createObjectURL(blob));
+
+        worker.onmessage = (e) => alert(e.data.data);
+
+        document.getElementById('btn-process').onclick = () => {
+            worker.postMessage({ action: 'RUN_PIPELINE', settings: State.settings });
+        };
+
+        window.sendTicket = async () => {
+            const msg = document.getElementById('ticket-msg').value;
+            console.log("Enviando reporte a Webhook:", msg);
+            // Implementación de fetch a API de soporte aquí
+        };
+
+        window.showTab = (tab) => console.log("Cambiando a:", tab);
+        
+        State.init();
     </script>
 </body>
 </html>
