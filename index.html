@@ -3,198 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LegadosPix | Restauración Fotográfica con IA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <title>Aether | Premium Photo Restoration AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* =========================================
-           VARIABLES CSS & RESET
-           ========================================= */
+        /* =========================================================
+           VARIABLES Y RESET
+           ========================================================= */
         :root {
-            --bg-base: #0f111a;
-            --bg-surface: #1e2130;
-            --bg-surface-hover: #2a2e42;
-            --text-main: #f8f9fa;
-            --text-muted: #a0a5b5;
-            --accent-primary: #6366f1; /* Azul/Púrpura IA */
-            --accent-hover: #4f46e5;
-            --success: #10b981;
-            --border-color: #33374c;
-            --transition: all 0.3s ease;
+            --bg-base: #09090b;
+            --bg-panel: #18181b;
+            --bg-input: #27272a;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.15);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
             background-color: var(--bg-base);
             color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
-        button { cursor: pointer; font-family: inherit; border: none; }
-
-        /* =========================================
-           HEADER & NAVEGACIÓN
-           ========================================= */
-        header {
-            position: fixed;
-            top: 0; width: 100%;
-            background: rgba(15, 17, 26, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        nav {
+            height: 100vh;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+        header {
+            height: 60px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
+            padding: 0 24px;
+            background-color: var(--bg-panel);
+            justify-content: space-between;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text-main);
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 10px;
         }
 
-        .logo i { color: var(--accent-primary); }
+        .logo span { color: var(--accent); }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
+        .status-badge {
+            font-size: 0.75rem;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .nav-links a {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover { color: var(--accent-primary); }
-
-        .btn-login {
-            background: transparent;
-            border: 2px solid var(--accent-primary);
-            color: var(--accent-primary);
-            padding: 0.5rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .btn-login:hover {
-            background: var(--accent-primary);
-            color: white;
-        }
-
-        /* =========================================
-           HERO SECTION
-           ========================================= */
-        #hero {
-            padding: 8rem 2rem 4rem;
-            text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        #hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #fff, var(--text-muted));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        #hero p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
-
-        .btn-primary {
-            background: var(--accent-primary);
-            color: white;
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-            transition: var(--transition);
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        /* =========================================
-           WORKSPACE (CORE APP)
-           ========================================= */
-        #workspace {
-            max-width: 1200px;
-            margin: 2rem auto 5rem;
-            padding: 0 2rem;
-        }
-
-        .workspace-container {
+        /* =========================================================
+           LAYOUT PRINCIPAL (GRID)
+           ========================================================= */
+        main {
             display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 2rem;
-            background: var(--bg-surface);
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
+            grid-template-columns: 320px 1fr 350px;
+            flex: 1;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Sidebar Filtros */
-        .sidebar {
-            background: rgba(0,0,0,0.2);
-            padding: 2rem;
+        .panel {
+            background-color: var(--bg-panel);
             border-right: 1px solid var(--border-color);
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
 
-        .sidebar h3 {
-            margin-bottom: 1.5rem;
-            font-size: 1.2rem;
+        .panel:last-child {
+            border-right: none;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .panel-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        /* =========================================================
+           CONTROLES DE IA (IZQUIERDA)
+           ========================================================= */
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-bottom: 24px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
         }
 
-        .filter-group {
+        /* Toggles Switch */
+        .toggle-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
         }
 
-        .filter-label {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .toggle-label {
+            font-size: 0.9rem;
+            font-weight: 400;
         }
 
-        /* Toggle Switch Custom */
         .switch {
             position: relative;
             display: inline-block;
@@ -208,633 +144,478 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #374151;
-            transition: .4s;
+            background-color: var(--bg-input);
+            transition: var(--transition);
             border-radius: 24px;
+            border: 1px solid var(--border-color);
         }
 
         .slider-toggle:before {
             position: absolute;
             content: "";
-            height: 18px;
-            width: 18px;
+            height: 16px;
+            width: 16px;
             left: 3px;
             bottom: 3px;
-            background-color: white;
-            transition: .4s;
+            background-color: var(--text-muted);
+            transition: var(--transition);
             border-radius: 50%;
         }
 
-        input:checked + .slider-toggle { background-color: var(--accent-primary); }
-        input:checked + .slider-toggle:before { transform: translateX(20px); }
+        input:checked + .slider-toggle {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        input:checked + .slider-toggle:before {
+            transform: translateX(20px);
+            background-color: white;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        /* Sliders / Range */
+        .range-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .range-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: var(--bg-input);
+            border-radius: 2px;
+            border: 1px solid var(--border-color);
+        }
 
         .btn-process {
-            width: 100%;
-            margin-top: 1rem;
-            background: var(--success);
-            padding: 0.8rem;
-            border-radius: 8px;
+            background: var(--accent);
             color: white;
-            font-weight: 600;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-glow);
+            margin-top: 10px;
         }
 
-        .btn-process:disabled {
-            background: #374151;
-            cursor: not-allowed;
-            color: var(--text-muted);
+        .btn-process:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
         }
 
-        /* Main Workspace Area */
-        .workspace-main {
-            padding: 2rem;
+        /* =========================================================
+           ÁREA CENTRAL (ANTES Y DESPUÉS)
+           ========================================================= */
+        .workspace {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            min-height: 500px;
+            justify-content: center;
+            padding: 40px;
+            background: radial-gradient(circle at center, #1a1a20 0%, var(--bg-base) 100%);
             position: relative;
         }
 
-        /* Drag & Drop Zone */
-        .drag-drop-zone {
+        .comparison-slider {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 4/3;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .comparison-slider img {
+            position: absolute;
             width: 100%;
             height: 100%;
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: var(--transition);
-            background: rgba(255,255,255,0.02);
-            cursor: pointer;
-        }
-
-        .drag-drop-zone.dragover {
-            border-color: var(--accent-primary);
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        .drag-drop-zone i {
-            font-size: 3rem;
-            color: var(--accent-primary);
-            margin-bottom: 1rem;
-        }
-
-        .drag-drop-zone p { color: var(--text-muted); }
-
-        /* Loading State */
-        .loading-state {
-            display: none;
-            text-align: center;
-        }
-        .spinner {
-            border: 4px solid rgba(255,255,255,0.1);
-            border-left-color: var(--accent-primary);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* Antes/Después Slider Component */
-        .ba-slider-container {
-            display: none; /* Oculto por defecto */
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            height: 400px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        .ba-img {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
             object-fit: cover;
-            user-select: none;
+            top: 0;
+            left: 0;
         }
 
-        .img-after {
-            z-index: 1;
-            /* Usamos CSS para simular la restauración si no hay API aún */
-            filter: grayscale(0%) contrast(1.2) brightness(1.1); 
-        }
-
+        /* Simulador de foto dañada con filtros CSS */
         .img-before {
-            z-index: 2;
-            filter: grayscale(100%) sepia(30%) blur(1px); /* Simula foto vieja */
-            clip-path: inset(0 50% 0 0); /* Muestra el 50% inicial */
+            filter: grayscale(100%) sepia(40%) contrast(85%) brightness(90%);
         }
 
-        .ba-range {
+        .img-after-wrapper {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 3;
+            top: 0;
+            left: 0;
+            width: 50%; /* Controlado por JS */
+            height: 100%;
+            overflow: hidden;
+            border-right: 2px solid var(--accent);
+        }
+
+        .slider-control {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             opacity: 0;
             cursor: ew-resize;
+            z-index: 10;
         }
 
-        .slider-line {
+        .slider-line-icon {
             position: absolute;
-            top: 0; left: 50%;
-            width: 4px; height: 100%;
-            background: white;
-            z-index: 2;
-            transform: translateX(-50%);
-            pointer-events: none;
-            box-shadow: 0 0 5px rgba(0,0,0,0.5);
-        }
-
-        .slider-button {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 40px; height: 40px;
-            background: white;
-            border-radius: 50%;
-            z-index: 3;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--accent-primary);
-            pointer-events: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        /* =========================================
-           CÓMO FUNCIONA
-           ========================================= */
-        #how-it-works {
-            background: var(--bg-surface);
-            padding: 5rem 2rem;
-            text-align: center;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            font-weight: 800;
-        }
-
-        .steps-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .step i {
-            font-size: 2.5rem;
-            color: var(--accent-primary);
-            margin-bottom: 1rem;
-            background: rgba(99, 102, 241, 0.1);
-            padding: 1.5rem;
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
             border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
         }
 
-        .step h4 { font-size: 1.2rem; margin-bottom: 0.5rem; }
-        .step p { color: var(--text-muted); font-size: 0.95rem; }
-
-        /* =========================================
-           GALERÍA DE MUESTRAS
-           ========================================= */
-        #gallery {
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .gallery-item {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            aspect-ratio: 4/3;
-            cursor: pointer;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .gallery-item:hover img { transform: scale(1.05); }
-
-        .gallery-overlay {
+        .slider-line-icon::before, .slider-line-icon::after {
+            content: '';
             position: absolute;
-            bottom: 0; left: 0; width: 100%;
-            padding: 1rem;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            text-align: left;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 3px;
         }
 
-        /* =========================================
-           FOOTER
-           ========================================= */
-        footer {
-            background: #08090d;
-            padding: 4rem 2rem 2rem;
-            border-top: 1px solid var(--border-color);
-        }
+        .slider-line-icon::before { transform: rotate(135deg); left: 6px; }
+        .slider-line-icon::after { transform: rotate(-45deg); right: 6px; }
 
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 3rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-col h5 { font-size: 1.1rem; margin-bottom: 1rem; color: white; }
-        .footer-col ul li { margin-bottom: 0.5rem; }
-        .footer-col ul li a { color: var(--text-muted); transition: var(--transition); }
-        .footer-col ul li a:hover { color: var(--accent-primary); }
-
-        .social-links { display: flex; gap: 1rem; margin-top: 1rem; }
-        .social-links a { color: var(--text-muted); font-size: 1.2rem; transition: var(--transition); }
-        .social-links a:hover { color: var(--accent-primary); }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            margin-top: 3rem;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* Formularios */
-        input[type="email"], textarea {
-            width: 100%;
-            padding: 0.8rem;
-            background: var(--bg-surface);
+        /* =========================================================
+           PANEL DE CONTACTO / LEAD GEN (DERECHA)
+           ========================================================= */
+        .lead-gen-card {
+            background: linear-gradient(145deg, #1f1f23 0%, #18181b 100%);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: white;
-            margin-bottom: 0.5rem;
-            font-family: inherit;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-top: 10px;
         }
 
-        /* =========================================
-           MEDIA QUERIES (RESPONSIVE)
-           ========================================= */
-        @media (max-width: 768px) {
-            .workspace-container { grid-template-columns: 1fr; }
-            .nav-links { display: none; /* Menú hamburguesa necesario en prod real */ }
-            #hero h1 { font-size: 2.5rem; }
+        .lead-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 20px;
         }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Alerta de Éxito */
+        .alert-success {
+            display: none;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-top: 16px;
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
 
     <header>
-        <nav>
-            <div class="logo">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> LegadosPix
-            </div>
-            <ul class="nav-links">
-                <li><a href="#hero">Inicio</a></li>
-                <li><a href="#how-it-works">Cómo Funciona</a></li>
-                <li><a href="#gallery">Galería</a></li>
-                <li><a href="#pricing">Precios</a></li>
-            </ul>
-            <button class="btn-login">Iniciar Sesión</button>
-        </nav>
+        <div class="logo">AETHER <span>AI</span></div>
+        <div class="status-badge">Engine: Online</div>
     </header>
 
     <main>
-        <section id="hero">
-            <h1>Devuélvele la vida a tus recuerdos más preciados</h1>
-            <p>Restaura fotografías antiguas, elimina rasguños y colorea memorias en blanco y negro en segundos utilizando inteligencia artificial de última generación.</p>
-            <a href="#workspace" class="btn-primary">Restaurar mi foto ahora</a>
-        </section>
+        <aside class="panel">
+            <h2 class="panel-title">Parámetros de Restauración</h2>
 
-        <section id="workspace">
-            <div class="workspace-container">
+            <div class="control-group">
+                <div class="toggle-container">
+                    <span class="toggle-label">Restauración de Daños Severos</span>
+                    <label class="switch">
+                        <input type="checkbox" id="ai-cracks" checked>
+                        <span class="slider-toggle"></span>
+                    </label>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted);">Algoritmo de relleno generativo para rayones y grietas profundas.</p>
+            </div>
+
+            <div class="control-group">
+                <div class="toggle-container">
+                    <span class="toggle-label">Colorización Neuronal</span>
+                    <label class="switch">
+                        <input type="checkbox" id="ai-color" checked>
+                        <span class="slider-toggle"></span>
+                    </label>
+                </div>
+                <div class="range-container">
+                    <div class="range-header">
+                        <span>Precisión Histórica</span>
+                        <span id="color-val">85%</span>
+                    </div>
+                    <input type="range" min="0" max="100" value="85" id="color-slider">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="toggle-container">
+                    <span class="toggle-label">Mejora Facial (Face Enhance)</span>
+                    <label class="switch">
+                        <input type="checkbox" id="ai-face" checked>
+                        <span class="slider-toggle"></span>
+                    </label>
+                </div>
+                <div class="range-container">
+                    <div class="range-header">
+                        <span>Intensidad de Upscaling</span>
+                        <span id="face-val">High</span>
+                    </div>
+                    <input type="range" min="1" max="3" value="3" id="face-slider">
+                </div>
+            </div>
+
+            <div class="control-group" style="border: none;">
+                <div class="toggle-container">
+                    <span class="toggle-label">Reducción de Ruido</span>
+                    <label class="switch">
+                        <input type="checkbox" id="ai-noise" checked>
+                        <span class="slider-toggle"></span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn-process" id="btn-render">Renderizar Vista Previa</button>
+        </aside>
+
+        <section class="workspace">
+            <div class="comparison-slider" id="compare-container">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=80" alt="Antes" class="img-before">
                 
-                <aside class="sidebar">
-                    <h3>Ajustes de IA</h3>
-                    
-                    <div class="filter-group">
-                        <div class="filter-label"><i class="fa-solid fa-band-aid"></i> Quitar Rasguños</div>
-                        <label class="switch">
-                            <input type="checkbox" id="toggle-scratch" checked>
-                            <span class="slider-toggle"></span>
-                        </label>
-                    </div>
-
-                    <div class="filter-group">
-                        <div class="filter-label"><i class="fa-solid fa-palette"></i> Colorear Imagen</div>
-                        <label class="switch">
-                            <input type="checkbox" id="toggle-color">
-                            <span class="slider-toggle"></span>
-                        </label>
-                    </div>
-
-                    <div class="filter-group">
-                        <div class="filter-label"><i class="fa-solid fa-face-smile"></i> Mejora Facial</div>
-                        <label class="switch">
-                            <input type="checkbox" id="toggle-face" checked>
-                            <span class="slider-toggle"></span>
-                        </label>
-                    </div>
-
-                    <div class="filter-group">
-                        <div class="filter-label"><i class="fa-solid fa-broom"></i> Reducir Ruido</div>
-                        <label class="switch">
-                            <input type="checkbox" id="toggle-denoise" checked>
-                            <span class="slider-toggle"></span>
-                        </label>
-                    </div>
-
-                    <button class="btn-process" id="btn-process" disabled>
-                        <i class="fa-solid fa-microchip"></i> Procesar con IA
-                    </button>
-                </aside>
-
-                <div class="workspace-main">
-                    
-                    <div class="drag-drop-zone" id="drop-zone">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <h3>Arrastra y suelta tu foto aquí</h3>
-                        <p>o haz clic para explorar tus archivos (JPG, PNG)</p>
-                        <input type="file" id="file-input" style="display: none;" accept="image/png, image/jpeg">
-                    </div>
-
-                    <div class="loading-state" id="loading-state">
-                        <div class="spinner"></div>
-                        <h3>Reconstruyendo pixeles...</h3>
-                        <p>Nuestra red neuronal está analizando los daños.</p>
-                    </div>
-
-                    <div class="ba-slider-container" id="ba-slider">
-                        <img src="https://images.unsplash.com/photo-1518285376174-a02b1f3c3a03?q=80&w=800&auto=format&fit=crop" class="ba-img img-after" id="img-after" alt="Foto Restaurada">
-                        
-                        <img src="https://images.unsplash.com/photo-1518285376174-a02b1f3c3a03?q=80&w=800&auto=format&fit=crop" class="ba-img img-before" id="img-before" alt="Foto Dañada">
-                        
-                        <input type="range" min="0" max="100" value="50" class="ba-range" id="ba-range">
-                        
-                        <div class="slider-line" id="slider-line"></div>
-                        <div class="slider-button" id="slider-button">
-                            <i class="fa-solid fa-arrows-left-right"></i>
-                        </div>
-                    </div>
-
+                <div class="img-after-wrapper" id="after-wrapper">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=80" alt="Después">
                 </div>
+                
+                <div class="slider-line-icon" id="slider-icon"></div>
+                <input type="range" min="0" max="100" value="50" class="slider-control" id="slider-input">
             </div>
         </section>
 
-        <section id="how-it-works">
-            <h2 class="section-title">El proceso es simple</h2>
-            <div class="steps-container">
-                <div class="step">
-                    <i class="fa-solid fa-upload"></i>
-                    <h4>1. Sube tu imagen</h4>
-                    <p>Arrastra tu fotografía escaneada o digitalizada en nuestro panel seguro.</p>
-                </div>
-                <div class="step">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    <h4>2. IA Procesando</h4>
-                    <p>Nuestros modelos detectan rasguños, ruido y falta de pigmentación automáticamente.</p>
-                </div>
-                <div class="step">
-                    <i class="fa-solid fa-download"></i>
-                    <h4>3. Descarga en HD</h4>
-                    <p>Compara el resultado y exporta tu nueva memoria en alta resolución.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="gallery">
-            <h2 class="section-title">Resultados que hablan por sí solos</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=600&auto=format&fit=crop" style="filter: grayscale(80%) sepia(20%);" alt="Ejemplo 1">
-                    <div class="gallery-overlay">
-                        <h4>Restauración de Retrato</h4>
-                        <p>Eliminación de ruido y mejora facial</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1509631179647-0c5728336209?q=80&w=600&auto=format&fit=crop" style="filter: contrast(1.2);" alt="Ejemplo 2">
-                    <div class="gallery-overlay">
-                        <h4>Coloreado Automático</h4>
-                        <p>De blanco y negro a color vívido</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1506869640319-fea1a275369c?q=80&w=600&auto=format&fit=crop" style="filter: brightness(1.1);" alt="Ejemplo 3">
-                    <div class="gallery-overlay">
-                        <h4>Recuperación de Archivo</h4>
-                        <p>Corrección de rasguños severos</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-col">
-                <div class="logo"><i class="fa-solid fa-wand-magic-sparkles"></i> LegadosPix</div>
-                <p style="color: var(--text-muted); margin-top: 1rem; font-size: 0.9rem;">
-                    Preservando la historia visual de generación en generación mediante tecnología neuronal.
-                </p>
-                <div class="social-links">
-                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                </div>
-            </div>
+        <aside class="panel">
+            <h2 class="panel-title">Servicio Premium</h2>
             
-            <div class="footer-col">
-                <h5>Producto</h5>
-                <ul>
-                    <li><a href="#">Características</a></li>
-                    <li><a href="#">Precios</a></li>
-                    <li><a href="#">API para Desarrolladores</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h5>Legal</h5>
-                <ul>
-                    <li><a href="#">Términos de Servicio</a></li>
-                    <li><a href="#">Política de Privacidad</a></li>
-                    <li><a href="#">Licencias Comerciales</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h5>Contacto</h5>
-                <form onsubmit="event.preventDefault();">
-                    <input type="email" placeholder="Tu correo electrónico" required>
-                    <textarea rows="2" placeholder="¿En qué te ayudamos?" required></textarea>
-                    <button class="btn-primary" style="padding: 0.5rem 1rem; width: 100%; font-size: 0.9rem;">Enviar Mensaje</button>
+            <div class="lead-gen-card">
+                <h3 style="font-size: 1.1rem; margin-bottom: 8px;">Asistencia Personalizada</h3>
+                <p class="lead-desc">Sube tu solicitud al sistema. Nuestro equipo de ingenieros revisará el daño de tu fotografía y preparará el motor para tu caso específico.</p>
+                
+                <form id="lead-form">
+                    <div class="form-group">
+                        <label for="client-name">Nombre Completo</label>
+                        <input type="text" id="client-name" class="form-control" placeholder="Ej. Carlos Mendoza" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="client-email">Correo Electrónico</label>
+                        <input type="email" id="client-email" class="form-control" placeholder="tucorreo@empresa.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="client-desc">Describe los daños de tu foto o lo que necesitas lograr</label>
+                        <textarea id="client-desc" class="form-control" placeholder="Tiene humedad en las esquinas y el rostro de mi abuelo está borroso..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-process" style="width: 100%;" id="btn-submit">Enviar Solicitud a Laboratorio</button>
+                    
+                    <div class="alert-success" id="success-message">
+                        ¡Solicitud recibida con éxito! Revisa tu bandeja de entrada.
+                    </div>
                 </form>
             </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; 2026 LegadosPix AI Restoration. Todos los derechos reservados.
-        </div>
-    </footer>
+        </aside>
+    </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // Elementos del DOM
-            const dropZone = document.getElementById('drop-zone');
-            const fileInput = document.getElementById('file-input');
-            const btnProcess = document.getElementById('btn-process');
-            const loadingState = document.getElementById('loading-state');
-            const baSlider = document.getElementById('ba-slider');
-            const imgBefore = document.getElementById('img-before');
-            const imgAfter = document.getElementById('img-after');
-            const baRange = document.getElementById('ba-range');
-            const sliderLine = document.getElementById('slider-line');
-            const sliderButton = document.getElementById('slider-button');
+        /* =========================================================
+           LÓGICA DEL SLIDER DE ANTES Y DESPUÉS
+           ========================================================= */
+        const sliderInput = document.getElementById('slider-input');
+        const afterWrapper = document.getElementById('after-wrapper');
+        const sliderIcon = document.getElementById('slider-icon');
 
-            let uploadedFile = null;
+        sliderInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            // Ajustar el ancho de la imagen revelada
+            afterWrapper.style.width = `${value}%`;
+            // Mover el icono de la línea separadora
+            sliderIcon.style.left = `${value}%`;
+        });
 
-            // --- 1. LÓGICA DE DRAG & DROP ---
-            
-            dropZone.addEventListener('click', () => fileInput.click());
+        /* =========================================================
+           LÓGICA DE LA INTERFAZ DE HERRAMIENTAS (UI)
+           ========================================================= */
+        const colorSlider = document.getElementById('color-slider');
+        const colorVal = document.getElementById('color-val');
+        const faceSlider = document.getElementById('face-slider');
+        const faceVal = document.getElementById('face-val');
 
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropZone.classList.add('dragover');
-            });
+        colorSlider.addEventListener('input', (e) => { colorVal.textContent = `${e.target.value}%`; });
+        
+        faceSlider.addEventListener('input', (e) => {
+            const vals = {1: 'Low', 2: 'Mid', 3: 'High'};
+            faceVal.textContent = vals[e.target.value];
+        });
 
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('dragover');
-            });
+        // Simulación de "Renderizado"
+        document.getElementById('btn-render').addEventListener('click', function() {
+            const btn = this;
+            const originalText = btn.textContent;
+            btn.textContent = 'Procesando tensores...';
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'wait';
 
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('dragover');
-                
-                if (e.dataTransfer.files.length) {
-                    handleFileSelection(e.dataTransfer.files[0]);
-                }
-            });
+            // AQUÍ VA LA CONEXIÓN A LA API DE IA (Ej. Replicate, Stable Diffusion, API Propia)
+            // fetch('https://tu-api-ia.com/v1/restore', { method: 'POST', body: ... })
+            // .then(response => response.json())
+            // .then(data => { updateImage(data.url) })
 
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length) {
-                    handleFileSelection(e.target.files[0]);
-                }
-            });
-
-            function handleFileSelection(file) {
-                // Validar imagen
-                if (!file.type.startsWith('image/')) {
-                    alert('Por favor, sube un archivo de imagen válido (JPG, PNG).');
-                    return;
-                }
-
-                uploadedFile = file;
-                const objectURL = URL.createObjectURL(file);
-                
-                // Preparar las imágenes del slider con la foto subida
-                imgBefore.src = objectURL;
-                imgAfter.src = objectURL; // En un escenario real, esta se actualizará post-API
-                
-                // Cambiar visual del Drop Zone
-                dropZone.innerHTML = `
-                    <i class="fa-solid fa-image" style="color: var(--success);"></i>
-                    <h3 style="color: white;">Imagen lista: ${file.name}</h3>
-                    <p>Selecciona los filtros en el panel y procesa.</p>
-                `;
-                dropZone.style.borderStyle = 'solid';
-                dropZone.style.borderColor = 'var(--success)';
-                
-                // Habilitar botón de procesar
-                btnProcess.disabled = false;
-                btnProcess.style.cursor = 'pointer';
-            }
-
-
-            // --- 2. LÓGICA DE SIMULACIÓN API & CARGA ---
-
-            btnProcess.addEventListener('click', () => {
-                /*
-                 * TODO: INTEGRACIÓN CON API DE INTELIGENCIA ARTIFICIAL
-                 * Aquí es donde conectarás tu backend (ej. Python/Flask/FastAPI).
-                 * * Ejemplo de Fetch API:
-                 * * const formData = new FormData();
-                 * formData.append('image', uploadedFile);
-                 * formData.append('scratch_removal', document.getElementById('toggle-scratch').checked);
-                 * formData.append('colorize', document.getElementById('toggle-color').checked);
-                 * * fetch('https://tu-api.com/v1/restore', {
-                 * method: 'POST',
-                 * body: formData
-                 * })
-                 * .then(res => res.json())
-                 * .then(data => {
-                 * imgAfter.src = data.restored_image_url;
-                 * mostrarVisor();
-                 * });
-                 */
-
-                // Ocultar zona de Drop, Mostrar Cargador
-                dropZone.style.display = 'none';
-                loadingState.style.display = 'block';
-                btnProcess.disabled = true;
-                btnProcess.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando...';
-
-                // Simular tiempo de respuesta de red neuronal (3 segundos)
+            setTimeout(() => {
+                btn.textContent = '¡Renderizado Completo!';
+                btn.style.background = '#10b981';
                 setTimeout(() => {
-                    loadingState.style.display = 'none';
-                    baSlider.style.display = 'block';
-                    btnProcess.innerHTML = '<i class="fa-solid fa-check"></i> Restauración Completa';
-                    btnProcess.style.background = 'var(--success)';
-                    
-                    // Resetear slider al centro
-                    baRange.value = 50;
-                    updateSlider();
-                }, 3000);
-            });
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                }, 2000);
+            }, 1500);
+        });
 
+        /* =========================================================
+           LÓGICA DE LEAD GEN Y AUTO-RESPUESTA (Ej. EmailJS)
+           ========================================================= */
+        /*
+        * INSTRUCCIONES DE CONFIGURACIÓN DEL CORREO AUTOMÁTICO:
+        * 1. Crea una cuenta en EmailJS (o servicio similar como SendGrid).
+        * 2. Conecta tu proveedor de correo (Ej. Gmail o SMTP de empresa).
+        * 3. Crea un "Template" de correo en EmailJS.
+        * 4. En el Template, configura la auto-respuesta para el cliente:
+        * - Asunto: "Confirmación de Laboratorio AETHER - Hemos recibido tu fotografía"
+        * - Cuerpo: "Hola {{client_name}},\n\nRecibimos tu mensaje y tu necesidad: '{{client_desc}}'.\n\nNuestro sistema de Inteligencia Artificial está listo para ayudarte. Un ingeniero de nuestro equipo revisará los daños mencionados y te enviará un diagnóstico en breve.\n\nAtentamente,\nEl Equipo de Aether."
+        * 5. Asegúrate de incluir el script CDN de EmailJS en el <head> y descomentar la inicialización abajo.
+        */
 
-            // --- 3. LÓGICA DEL VISOR ANTES / DESPUÉS ---
-            
-            function updateSlider() {
-                const sliderVal = baRange.value;
-                // Clip-path recorta la imagen superior (Antes). 
-                // inset(top right bottom left)
-                imgBefore.style.clipPath = `inset(0 ${100 - sliderVal}% 0 0)`;
-                sliderLine.style.left = `${sliderVal}%`;
-                sliderButton.style.left = `${sliderVal}%`;
-            }
+        const form = document.getElementById('lead-form');
+        const submitBtn = document.getElementById('btn-submit');
+        const successMsg = document.getElementById('success-message');
 
-            baRange.addEventListener('input', updateSlider);
-            
-            // Actualizar slider en caso de redimensionar la ventana
-            window.addEventListener('resize', () => {
-                if(baSlider.style.display === 'block') {
-                    updateSlider();
-                }
-            });
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Evita recargar la página
+
+            // Capturar los datos
+            const formData = {
+                client_name: document.getElementById('client-name').value,
+                client_email: document.getElementById('client-email').value,
+                client_desc: document.getElementById('client-desc').value
+            };
+
+            // Estado de carga UI
+            submitBtn.textContent = 'Enviando al sistema...';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+
+            // =================================================================
+            // AQUÍ VA LA INTEGRACIÓN CON EMAILJS
+            // emailjs.send('TU_SERVICE_ID', 'TU_TEMPLATE_ID', formData)
+            //   .then(function(response) {
+            //      console.log('SUCCESS!', response.status, response.text);
+            //      // Mostrar éxito
+            //   }, function(error) {
+            //      console.log('FAILED...', error);
+            //   });
+            // =================================================================
+
+            // SIMULACIÓN DE ENVÍO Y AUTO-RESPUESTA (Borrar cuando conectes API real)
+            setTimeout(() => {
+                // Restaurar botón
+                submitBtn.textContent = 'Enviar Solicitud a Laboratorio';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                
+                // Limpiar formulario y mostrar éxito
+                form.reset();
+                successMsg.style.display = 'block';
+
+                // Ocultar mensaje después de 5 segundos
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 5000);
+            }, 1800);
         });
     </script>
 </body>
