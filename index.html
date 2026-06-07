@@ -3,754 +3,1373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Lab AI | Premium Restoration Suite</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Aura Vision Studio - Premium Media Editor</title>
     <style>
         /* ==========================================================================
-           1. DESIGN TOKENS & VARIABLES (London Enterprise Style)
+           VARIABLES Y CONFIGURACIÓN BASE
            ========================================================================== */
         :root {
-            --bg-deep: #050507; /* Deep Obsidian */
-            --bg-panel: rgba(18, 18, 22, 0.65); /* Frost Glass */
-            --bg-panel-hover: rgba(28, 28, 34, 0.8);
-            --accent-cyan: #00e5ff; /* Neon Cyan Active State */
-            --accent-cyan-glow: rgba(0, 229, 255, 0.25);
-            --accent-platinum: #e2e8f0;
-            --text-main: #f8fafc;
-            --text-muted: #8b949e;
-            --border-glass: 1px solid rgba(255, 255, 255, 0.06);
-            --border-glass-light: 1px solid rgba(255, 255, 255, 0.12);
-            --radius-lg: 16px;
-            --radius-md: 8px;
-            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --bg-primary: #0a0a0c;
+            --bg-secondary: #141417;
+            --bg-tertiary: #1f1f23;
+            --bg-glass: rgba(20, 20, 23, 0.7);
+            --text-main: #f3f3f4;
+            --text-muted: #8b8b93;
+            --accent-primary: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-success: #10b981;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(99, 102, 241, 0.4);
+            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.2);
+            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         /* ==========================================================================
-           2. GLOBAL RESET & TYPOGRAPHY
+           RESET Y ESTILOS GLOBALES
            ========================================================================== */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: var(--font-stack);
-            background-color: var(--bg-deep);
+            font-family: var(--font-main);
+            background-color: var(--bg-primary);
             color: var(--text-main);
+            overflow: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        button { cursor: pointer; border: none; background: none; font-family: inherit; }
-        input, textarea { font-family: inherit; outline: none; }
-        
-        /* Glassmorphism Utility */
-        .glass {
-            background: var(--bg-panel);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: var(--border-glass);
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        input, textarea {
+            font-family: inherit;
+            outline: none;
+        }
+
+        /* Barra de desplazamiento personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
         }
 
         /* ==========================================================================
-           3. HEADER NAVIGATION
+           HEADER Y NAVEGACIÓN
            ========================================================================== */
         header {
-            height: 70px;
+            height: 60px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0 32px;
-            border-bottom: var(--border-glass);
+            justify-content: space-between;
+            padding: 0 24px;
             z-index: 100;
         }
-        .logo {
-            font-weight: 600;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--text-main);
+
+        .brand {
             display: flex;
             align-items: center;
             gap: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .logo::before {
-            content: '';
-            display: block;
-            width: 8px;
-            height: 8px;
-            background: var(--accent-cyan);
-            border-radius: 50%;
-            box-shadow: 0 0 12px var(--accent-cyan-glow);
-        }
-        .tabs {
+
+        .tabs-container {
             display: flex;
-            background: rgba(0,0,0,0.3);
-            border-radius: 30px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
             padding: 4px;
-            border: var(--border-glass);
         }
+
         .tab-btn {
-            padding: 8px 24px;
-            border-radius: 24px;
+            background: transparent;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            padding: 8px 24px;
+            border-radius: 6px;
+            font-size: 0.9rem;
             font-weight: 500;
             transition: var(--transition-smooth);
         }
-        .tab-btn.active {
-            background: var(--bg-panel-hover);
+
+        .tab-btn:hover {
             color: var(--text-main);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            border: var(--border-glass-light);
         }
-        .concierge-btn {
-            color: var(--accent-platinum);
-            font-size: 0.85rem;
-            font-weight: 500;
-            padding: 8px 16px;
-            border: var(--border-glass);
-            border-radius: var(--radius-md);
+
+        .tab-btn.active {
+            background: var(--bg-secondary);
+            color: var(--text-main);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-export {
+            background: var(--accent-primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
             transition: var(--transition-smooth);
+            box-shadow: var(--shadow-glow);
         }
-        .concierge-btn:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            box-shadow: 0 0 15px var(--accent-cyan-glow);
+
+        .btn-export:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
         }
 
         /* ==========================================================================
-           4. WORKSPACE LAYOUTS
+           CONTENEDOR PRINCIPAL Y ESPACIOS DE TRABAJO
            ========================================================================== */
+        main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
         .workspace {
             display: none;
-            flex: 1;
-            overflow: hidden;
-            height: calc(100vh - 70px);
-        }
-        .workspace.active {
-            display: grid;
-        }
-        
-        /* Photo Suite Layout */
-        #photo-suite { grid-template-columns: 1fr 380px; }
-        
-        /* Video Suite Layout */
-        #video-suite { grid-template-columns: 1fr 380px; grid-template-rows: 1fr 280px; }
-        .video-canvas { grid-column: 1 / 2; grid-row: 1 / 2; }
-        .video-timeline { grid-column: 1 / 3; grid-row: 2 / 3; border-top: var(--border-glass); }
-
-        /* ==========================================================================
-           5. CANVAS & COMPONENTS
-           ========================================================================== */
-        .canvas-area {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 32px;
-            background: radial-gradient(circle at center, #111115 0%, var(--bg-deep) 100%);
-        }
-        
-        /* Before & After Slider */
-        .ba-container {
-            position: relative;
             width: 100%;
-            max-width: 900px;
-            aspect-ratio: 16/9;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            border: var(--border-glass);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            height: 100%;
+            animation: fadeIn 0.4s ease-out;
         }
-        .ba-img {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
+
+        .workspace.active {
+            display: flex;
         }
-        .ba-after {
-            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
-        }
-        .ba-slider {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            opacity: 0;
-            cursor: ew-resize;
-            z-index: 10;
-        }
-        .ba-line {
-            position: absolute;
-            top: 0; left: 50%;
-            width: 2px; height: 100%;
-            background: var(--accent-cyan);
-            box-shadow: 0 0 10px var(--accent-cyan-glow);
-            z-index: 5;
-            pointer-events: none;
-            transform: translateX(-50%);
-        }
-        .ba-line::after {
-            content: '◂ ▸';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--bg-deep);
-            color: var(--accent-cyan);
-            padding: 8px;
-            border-radius: 50%;
-            border: 1px solid var(--accent-cyan);
-            font-size: 10px;
-            letter-spacing: -1px;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ==========================================================================
-           6. SIDEBAR CONSOLE (AI TOOLS)
+           LABORATORIO DE FOTOGRAFÍA
            ========================================================================== */
-        .sidebar {
-            border-left: var(--border-glass);
-            padding: 24px;
+        #photo-lab {
+            display: none;
+            flex-direction: row;
+        }
+
+        #photo-lab.active {
+            display: flex;
+        }
+
+        /* Panel Izquierdo: Herramientas Nivel Dios */
+        .sidebar-left {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
             overflow-y: auto;
         }
-        .sidebar::-webkit-scrollbar { width: 6px; }
-        .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        
+
+        .panel-section {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
         .panel-title {
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--text-muted);
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        /* Accordions */
-        details {
             margin-bottom: 16px;
-            background: rgba(255,255,255,0.02);
-            border: var(--border-glass);
-            border-radius: var(--radius-md);
-            overflow: hidden;
         }
-        summary {
-            padding: 16px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            list-style: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition-smooth);
-        }
-        summary:hover { background: rgba(255,255,255,0.04); }
-        summary::after {
-            content: '+';
-            color: var(--accent-cyan);
-            font-size: 1.2rem;
-            transition: transform 0.3s;
-        }
-        details[open] summary::after { transform: rotate(45deg); }
-        .details-content { padding: 0 16px 16px; }
 
-        /* UI Controls: Toggles & Sliders */
-        .control-group {
-            margin-top: 16px;
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .tool-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 16px 8px;
+            color: var(--text-main);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            transition: var(--transition-smooth);
         }
-        .control-header {
+
+        .tool-btn:hover {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .tool-btn i {
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+        }
+
+        .slider-container {
+            margin-top: 16px;
+        }
+
+        .slider-label {
             display: flex;
             justify-content: space-between;
             font-size: 0.8rem;
             color: var(--text-muted);
+            margin-bottom: 8px;
         }
-        
-        /* Toggle Switch */
-        .toggle {
+
+        input[type="range"] {
+            width: 100%;
+            appearance: none;
+            background: var(--bg-tertiary);
+            height: 4px;
+            border-radius: 2px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Centro: Dropzone y Canvas */
+        .editor-center {
+            flex: 1;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
             position: relative;
-            display: inline-block;
-            width: 36px;
-            height: 20px;
-        }
-        .toggle input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255,255,255,0.1);
-            transition: .4s;
-            border-radius: 34px;
-        }
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 14px; width: 14px;
-            left: 3px; bottom: 3px;
-            background-color: var(--text-muted);
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .toggle-slider { background-color: rgba(0, 229, 255, 0.2); border: 1px solid var(--accent-cyan); }
-        input:checked + .toggle-slider:before {
-            transform: translateX(16px);
-            background-color: var(--accent-cyan);
-            box-shadow: 0 0 8px var(--accent-cyan-glow);
         }
 
-        /* Range Slider Custom */
-        input[type=range] {
-            -webkit-appearance: none;
+        .drop-zone {
             width: 100%;
-            background: transparent;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 12px; width: 12px;
-            border-radius: 50%;
-            background: var(--accent-cyan);
-            cursor: pointer;
-            margin-top: -5px;
-            box-shadow: 0 0 10px var(--accent-cyan-glow);
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 2px;
-            cursor: pointer;
-            background: rgba(255,255,255,0.2);
-        }
-
-        /* Action Buttons */
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            margin-top: 24px;
-            background: rgba(0, 229, 255, 0.1);
-            border: 1px solid var(--accent-cyan);
-            color: var(--accent-cyan);
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            border-radius: var(--radius-md);
+            max-width: 800px;
+            height: 500px;
+            border: 2px dashed var(--border-light);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
             transition: var(--transition-smooth);
-            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
         }
-        .btn-primary:hover {
-            background: var(--accent-cyan);
-            color: var(--bg-deep);
-            box-shadow: 0 0 20px var(--accent-cyan-glow);
+
+        .drop-zone.dragover {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .drop-zone-content {
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .drop-zone-content i {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .drop-zone-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .drop-zone-content span {
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        #photo-canvas-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #photo-preview {
+            max-width: 100%;
+            max-height: 100%;
+            box-shadow: var(--shadow-subtle);
+            border-radius: 4px;
+            transition: filter 0.3s ease;
+        }
+
+        /* Panel Derecho: Filtros */
+        .sidebar-right {
+            width: 320px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .filter-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            padding: 24px;
+        }
+
+        .filter-item {
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .filter-item:hover, .filter-item.active {
+            border-color: var(--accent-primary);
+        }
+
+        .filter-preview {
+            width: 100%;
+            height: 80px;
+            background: #2a2a30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .filter-name {
+            padding: 8px;
+            text-align: center;
+            font-size: 0.8rem;
+            background: var(--bg-tertiary);
         }
 
         /* ==========================================================================
-           7. VIDEO TIMELINE PLACEHOLDER
+           ESTUDIO DE VIDEO
            ========================================================================== */
-        .timeline-container {
-            padding: 16px 24px;
+        #video-studio {
+            display: none;
+            flex-direction: column;
+        }
+
+        #video-studio.active {
+            display: flex;
+        }
+
+        /* Área Superior del Video */
+        .video-top-section {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Panel de Herramientas de Video */
+        .video-tools {
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-light);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-tool-list {
+            padding: 16px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            background: rgba(10, 10, 12, 0.9);
         }
-        .timeline-tools {
-            display: flex;
-            gap: 16px;
-            border-bottom: var(--border-glass);
-            padding-bottom: 12px;
-        }
-        .tool-icon {
-            width: 24px; height: 24px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .track {
-            height: 48px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 4px;
-            position: relative;
-            border: var(--border-glass-light);
+
+        .v-tool-btn {
             display: flex;
             align-items: center;
+            gap: 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
         }
-        .track-clip {
-            position: absolute;
-            left: 10%; width: 40%; height: 100%;
-            background: linear-gradient(90deg, rgba(0,229,255,0.2), rgba(0,229,255,0.4));
-            border-radius: 4px;
-            border: 1px solid var(--accent-cyan);
+
+        .v-tool-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-primary);
         }
-        .playhead {
+
+        .v-tool-btn i {
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Reproductor de Video */
+        .video-player-area {
+            flex: 1;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+        }
+
+        .video-wrapper {
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 12px;
+            box-shadow: var(--shadow-subtle);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .video-upload-prompt {
             position: absolute;
-            top: 0; bottom: 0; left: 30%;
-            width: 2px;
-            background: #ff0055;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-muted);
             z-index: 10;
         }
-        .playhead::before {
-            content: '';
+
+        .video-upload-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition-smooth);
+        }
+
+        .video-upload-btn:hover {
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .video-controls {
+            width: 100%;
+            max-width: 900px;
+            height: 48px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 16px;
+            border: 1px solid var(--border-light);
+        }
+
+        .ctrl-btn {
+            background: none;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .ctrl-btn:hover {
+            opacity: 1;
+            color: var(--accent-primary);
+        }
+
+        .time-display {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        .scrubber {
+            flex: 1;
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .scrubber-fill {
             position: absolute;
-            top: -6px; left: -5px;
-            width: 12px; height: 12px;
-            background: #ff0055;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--accent-primary);
             border-radius: 2px;
         }
 
-        /* ==========================================================================
-           8. CONCIERGE MODAL (LEAD GEN) & TOAST
-           ========================================================================== */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(8px);
+        /* Línea de Tiempo (Timeline) */
+        .timeline-section {
+            height: 280px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-light);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+        }
+
+        .timeline-header {
+            height: 40px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
             align-items: center;
-            opacity: 0;
+            padding: 0 16px;
+            gap: 24px;
+            background: var(--bg-tertiary);
+        }
+
+        .timeline-tools {
+            display: flex;
+            gap: 12px;
+        }
+
+        .t-tool {
+            color: var(--text-muted);
+            background: none;
+            font-size: 1rem;
+        }
+
+        .t-tool:hover {
+            color: var(--text-main);
+        }
+
+        .timeline-ruler {
+            flex: 1;
+            height: 100%;
+            position: relative;
+            border-left: 1px solid var(--border-light);
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 49px,
+                var(--border-light) 50px
+            );
+            opacity: 0.3;
+        }
+
+        .timeline-tracks {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .track {
+            height: 60px;
+            display: flex;
+            margin-bottom: 4px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .track-info {
+            width: 150px;
+            min-width: 150px;
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            gap: 10px;
+            background: var(--bg-secondary);
+            z-index: 2;
+        }
+
+        .track-content {
+            flex: 1;
+            position: relative;
+            background: var(--bg-primary);
+        }
+
+        .clip {
+            position: absolute;
+            height: 44px;
+            top: 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            font-size: 0.75rem;
+            color: white;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .clip.video-clip {
+            background: linear-gradient(90deg, #4f46e5, #6366f1);
+            left: 50px;
+            width: 400px;
+        }
+
+        .clip.audio-clip {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            left: 50px;
+            width: 400px;
+        }
+
+        .clip.text-clip {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            left: 100px;
+            width: 150px;
+        }
+
+        .playhead {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 200px;
+            width: 2px;
+            background: #ef4444;
+            z-index: 10;
             pointer-events: none;
+        }
+
+        .playhead::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -4px;
+            width: 10px;
+            height: 10px;
+            background: #ef4444;
+            border-radius: 50%;
+        }
+
+        /* ==========================================================================
+           FORMULARIO DE CONTACTO AUTOMATIZADO Y MODAL
+           ========================================================================== */
+        .floating-contact {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-glow), var(--shadow-subtle);
+            cursor: pointer;
             transition: var(--transition-smooth);
             z-index: 1000;
         }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        
-        .modal-box {
-            width: 100%; max-width: 450px;
-            padding: 40px;
-            border-radius: var(--radius-lg);
+
+        .floating-contact:hover {
+            transform: scale(1.1) rotate(15deg);
+            background: var(--accent-hover);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             position: relative;
             transform: translateY(20px);
-            transition: var(--transition-smooth);
+            transition: transform 0.3s ease;
         }
-        .modal-overlay.active .modal-box { transform: translateY(0); }
-        
-        .modal-title { font-size: 1.2rem; font-weight: 500; margin-bottom: 8px; color: var(--text-main); }
-        .modal-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
-        
-        .form-group { margin-bottom: 16px; }
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(0,0,0,0.5);
-            border: var(--border-glass-light);
-            border-radius: var(--radius-md);
-            color: var(--text-main);
-            font-size: 0.85rem;
-            transition: var(--transition-smooth);
-        }
-        .form-input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan-glow); }
-        textarea.form-input { resize: vertical; min-height: 100px; }
-        
-        .close-modal {
-            position: absolute; top: 16px; right: 24px;
-            font-size: 1.5rem; color: var(--text-muted); transition: var(--transition-smooth);
-        }
-        .close-modal:hover { color: var(--text-main); }
 
-        /* Toast Notification */
-        .toast {
-            position: fixed; bottom: 32px; right: 32px;
-            background: var(--bg-panel); border: 1px solid var(--accent-cyan);
-            backdrop-filter: blur(10px); padding: 16px 24px;
-            border-radius: var(--radius-md); color: var(--text-main);
-            font-size: 0.85rem; display: flex; align-items: center; gap: 12px;
-            transform: translateX(120%); transition: var(--transition-smooth);
-            z-index: 2000; box-shadow: 0 10px 30px rgba(0,229,255,0.1);
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
         }
-        .toast.show { transform: translateX(0); }
-        .toast-icon {
-            display: inline-flex; justify-content: center; align-items: center;
-            width: 24px; height: 24px; background: rgba(0,229,255,0.2);
-            border-radius: 50%; color: var(--accent-cyan);
+
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            transition: var(--transition-smooth);
+        }
+
+        .close-modal:hover {
+            color: white;
+        }
+
+        .modal-header {
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: var(--transition-smooth);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px var(--border-focus);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--accent-primary);
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-hover);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* Notificación Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--accent-success);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 6px;
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-size: 0.95rem;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast i {
+            color: var(--accent-success);
+            font-size: 1.2rem;
+        }
+
+        /* Utilidades de Iconos (Simulados con entidades o texto simple para evitar dependencias externas masivas, aunque se asume un kit si se requiere. Aquí usaremos símbolos/emojis o texto corto por pureza de código) */
+        .icon-placeholder {
+            display: inline-block;
+            font-style: normal;
         }
     </style>
 </head>
 <body>
 
-    <header class="glass">
-        <div class="logo">Master Lab AI</div>
-        <div class="tabs">
-            <button class="tab-btn active" data-target="photo-suite">Photo Suite</button>
-            <button class="tab-btn" data-target="video-suite">Video Suite</button>
+    <header>
+        <div class="brand">
+            <span class="icon-placeholder">✨</span> AURA STUDIO
         </div>
-        <button class="concierge-btn" onclick="toggleModal(true)">Concierge / Soporte</button>
+        
+        <div class="tabs-container">
+            <button class="tab-btn active" data-target="photo-lab">Laboratorio de Fotografía</button>
+            <button class="tab-btn" data-target="video-studio">Estudio de Video</button>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn-export" id="main-export-btn">Exportar Proyecto</button>
+        </div>
     </header>
 
-    <main id="photo-suite" class="workspace active">
-        <section class="canvas-area">
-            <div class="ba-container">
-                <img src="https://images.unsplash.com/photo-1518131333734-73898dc2edbc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80&grayscale=true" class="ba-img" alt="Before Restoration">
-                <img src="https://images.unsplash.com/photo-1518131333734-73898dc2edbc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=100" class="ba-img ba-after" id="img-after" alt="After Restoration">
-                
-                <input type="range" min="0" max="100" value="50" class="ba-slider" id="ba-slider">
-                <div class="ba-line" id="ba-line"></div>
+    <main>
+        <section id="photo-lab" class="workspace active">
+            <aside class="sidebar-left">
+                <div class="panel-section">
+                    <h3 class="panel-title">Restauración Nivel Dios</h3>
+                    <div class="tool-grid">
+                        <button class="tool-btn" onclick="applyEffect('restore')">
+                            <span class="icon-placeholder">🪄</span>
+                            <span>Restauración IA</span>
+                        </button>
+                        <button class="tool-btn" onclick="applyEffect('unscratch')">
+                            <span class="icon-placeholder">🩹</span>
+                            <span>Quitar Rasguños</span>
+                        </button>
+                        <button class="tool-btn" onclick="applyEffect('colorize')">
+                            <span class="icon-placeholder">🎨</span>
+                            <span>Colorización IA</span>
+                        </button>
+                        <button class="tool-btn" onclick="applyEffect('upscale')">
+                            <span class="icon-placeholder">🔍</span>
+                            <span>Escalado 4K</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="panel-title">Ajustes Finos</h3>
+                    
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Exposición</span>
+                            <span id="val-expo">0</span>
+                        </div>
+                        <input type="range" min="-100" max="100" value="0" id="slide-expo">
+                    </div>
+                    
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Contraste</span>
+                            <span id="val-cont">0</span>
+                        </div>
+                        <input type="range" min="-100" max="100" value="0" id="slide-cont">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Nitidez Automática</span>
+                            <span id="val-sharp">0</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="0" id="slide-sharp">
+                    </div>
+                </div>
+            </aside>
+
+            <div class="editor-center" id="photo-center">
+                <div class="drop-zone" id="photo-dropzone">
+                    <input type="file" id="photo-input" hidden accept="image/*">
+                    <div class="drop-zone-content">
+                        <div class="icon-placeholder" style="font-size:3rem; margin-bottom:1rem;">📥</div>
+                        <p>Arrastra y suelta tu fotografía aquí</p>
+                        <span>o haz clic para explorar tus archivos</span>
+                    </div>
+                </div>
+                <div id="photo-canvas-container">
+                    <img id="photo-preview" src="" alt="Vista previa">
+                </div>
             </div>
+
+            <aside class="sidebar-right">
+                <div class="panel-section" style="border-bottom:none; padding-bottom:0;">
+                    <h3 class="panel-title">Catálogo de Filtros Premium</h3>
+                </div>
+                <div class="filter-list">
+                    <div class="filter-item" onclick="setFilter('none')">
+                        <div class="filter-preview" style="background:#333;">Original</div>
+                        <div class="filter-name">Original</div>
+                    </div>
+                    <div class="filter-item" onclick="setFilter('sepia(0.8)')">
+                        <div class="filter-preview" style="background:#5c4a3d;">Vintage</div>
+                        <div class="filter-name">Vintage 1920</div>
+                    </div>
+                    <div class="filter-item" onclick="setFilter('grayscale(1) contrast(1.2)')">
+                        <div class="filter-preview" style="background:#222;">Noir</div>
+                        <div class="filter-name">Cinematic Noir</div>
+                    </div>
+                    <div class="filter-item" onclick="setFilter('saturate(1.5) contrast(1.1)')">
+                        <div class="filter-preview" style="background:#4a2c82;">Vibrant</div>
+                        <div class="filter-name">Ultra Vibrant</div>
+                    </div>
+                    <div class="filter-item" onclick="setFilter('hue-rotate(90deg)')">
+                        <div class="filter-preview" style="background:#2c824a;">Cyber</div>
+                        <div class="filter-name">Cyberpunk</div>
+                    </div>
+                    <div class="filter-item" onclick="setFilter('brightness(1.2) saturate(0.8)')">
+                        <div class="filter-preview" style="background:#82756a;">Fade</div>
+                        <div class="filter-name">Matte Fade</div>
+                    </div>
+                </div>
+            </aside>
         </section>
 
-        <aside class="sidebar glass">
-            <div class="panel-title">
-                <span>Herramientas IA Cuánticas</span>
-                <span style="color: var(--accent-cyan);">● ACTIVO</span>
-            </div>
 
-            <details open>
-                <summary>Reconstrucción Neuronal</summary>
-                <div class="details-content">
-                    <div class="control-group">
-                        <div class="control-header">
-                            <span>Reparación de Grietas</span>
-                            <label class="toggle">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        <input type="range" min="0" max="100" value="85">
-                    </div>
-                </div>
-            </details>
-
-            <details>
-                <summary>Colorización Cuántica</summary>
-                <div class="details-content">
-                    <div class="control-group">
-                        <div class="control-header">
-                            <span>Precisión Histórica</span>
-                            <span>98%</span>
-                        </div>
-                        <input type="range" min="0" max="100" value="98">
-                    </div>
-                </div>
-            </details>
-
-            <details>
-                <summary>Micro-detallado Facial</summary>
-                <div class="details-content">
-                    <div class="control-group">
-                        <div class="control-header">
-                            <span>Escalado a 8K</span>
-                            <label class="toggle">
-                                <input type="checkbox">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-header">
-                            <span>Recuperación de Textura</span>
-                            <span>Alto</span>
-                        </div>
-                        <input type="range" min="0" max="100" value="70">
-                    </div>
-                </div>
-            </details>
-
-            <details>
-                <summary>Supresión de Ruido</summary>
-                <div class="details-content">
-                    <div class="control-group">
-                        <div class="control-header">
-                            <span>Filtro Anti-Aberraciones</span>
-                            <label class="toggle">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </details>
-
-            <button class="btn-primary">Aplicar LUT Cinematográfico</button>
-        </aside>
-    </main>
-
-    <main id="video-suite" class="workspace">
-        <section class="canvas-area video-canvas">
-            <div class="ba-container" style="display: flex; justify-content: center; align-items: center; background: #000;">
-                <span style="color: var(--text-muted); font-size: 0.9rem; letter-spacing: 1px;">ÁREA DE PREVISUALIZACIÓN DE VIDEO</span>
-            </div>
-        </section>
-
-        <aside class="sidebar glass" style="grid-column: 2 / 3; grid-row: 1 / 3;">
-            <div class="panel-title">
-                <span>Motor de Procesamiento Video</span>
-                <span style="color: var(--accent-cyan);">● LISTO</span>
-            </div>
+        <section id="video-studio" class="workspace">
             
-            <details open>
-                <summary>Dinámica de Fotogramas</summary>
-                <div class="details-content">
-                    <div class="control-group">
-                        <div class="control-header">
-                            <span>Interpolación Óptica (Slow-mo)</span>
-                            <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+            <div class="video-top-section">
+                <aside class="video-tools">
+                    <div class="panel-section">
+                        <h3 class="panel-title">Panel de Edición Avanzado</h3>
+                    </div>
+                    <div class="video-tool-list">
+                        <button class="v-tool-btn">
+                            <span class="icon-placeholder">✂️</span> Recorte Inteligente
+                        </button>
+                        <button class="v-tool-btn">
+                            <span class="icon-placeholder">🔄</span> Transiciones Pro
+                        </button>
+                        <button class="v-tool-btn">
+                            <span class="icon-placeholder">📝</span> Texto Dinámico
+                        </button>
+                        <button class="v-tool-btn">
+                            <span class="icon-placeholder">🎙️</span> Sincronización Faceless
+                        </button>
+                        <button class="v-tool-btn">
+                            <span class="icon-placeholder">🌟</span> Efectos Visuales
+                        </button>
+                        <button class="v-tool-btn">
+                            <span class="icon-placeholder">😎</span> Stickers Animados
+                        </button>
+                    </div>
+                </aside>
+
+                <div class="video-player-area">
+                    <div class="video-wrapper">
+                        <div class="video-upload-prompt" id="video-prompt">
+                            <button class="video-upload-btn" onclick="document.getElementById('video-input').click()">
+                                <span class="icon-placeholder">📁</span> Cargar Archivo de Video
+                            </button>
+                            <input type="file" id="video-input" hidden accept="video/*">
                         </div>
+                        <video id="main-video" style="display:none; width:100%; height:100%; object-fit:contain;"></video>
+                    </div>
+
+                    <div class="video-controls">
+                        <button class="ctrl-btn" id="play-pause-btn">▶</button>
+                        <span class="time-display">00:00:00 / 00:05:30</span>
+                        <div class="scrubber">
+                            <div class="scrubber-fill" style="width: 35%;"></div>
+                        </div>
+                        <button class="ctrl-btn">🔊</button>
+                        <button class="ctrl-btn">⛶</button>
                     </div>
                 </div>
-            </details>
+            </div>
 
-            <details>
-                <summary>Inteligencia Espacial</summary>
-                <div class="details-content">
-                    <div class="control-group">
-                        <div class="control-header">
-                            <span>Tracking de Objetos Auto</span>
-                            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                        </div>
+            <div class="timeline-section">
+                <div class="timeline-header">
+                    <div class="timeline-tools">
+                        <button class="t-tool">↩️</button>
+                        <button class="t-tool">↪️</button>
+                        <button class="t-tool">✂️</button>
+                        <button class="t-tool">🗑️</button>
                     </div>
-                    <div class="control-group" style="margin-top: 10px;">
-                        <div class="control-header">
-                            <span>Extracción de Fondo (No Chroma)</span>
-                            <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
-                        </div>
-                    </div>
+                    <div class="timeline-ruler"></div>
                 </div>
-            </details>
-
-            <button class="btn-primary" style="margin-top: 40px;">Renderizar Upscale 4K/8K</button>
-        </aside>
-
-        <section class="video-timeline glass">
-            <div class="timeline-container">
-                <div class="timeline-tools">
-                    <div class="tool-icon"></div>
-                    <div class="tool-icon"></div>
-                    <div class="tool-icon"></div>
-                    <div style="flex:1"></div>
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">00:01:23:14</span>
-                </div>
-                <div style="position: relative; height: 100%; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                <div class="timeline-tracks">
                     <div class="playhead"></div>
+                    
                     <div class="track">
-                        <span style="font-size: 0.7rem; color: #555; padding-left: 10px;">V1</span>
-                        <div class="track-clip"></div>
+                        <div class="track-info">
+                            <span class="icon-placeholder">🎬</span> Video Principal
+                        </div>
+                        <div class="track-content">
+                            <div class="clip video-clip">V_001_Mty.mp4</div>
+                        </div>
                     </div>
+
                     <div class="track">
-                        <span style="font-size: 0.7rem; color: #555; padding-left: 10px;">A1</span>
-                        <div class="track-clip" style="background: linear-gradient(90deg, rgba(255,0,85,0.2), rgba(255,0,85,0.4)); border-color: #ff0055;"></div>
+                        <div class="track-info">
+                            <span class="icon-placeholder">🎵</span> Audio / Voz
+                        </div>
+                        <div class="track-content">
+                            <div class="clip audio-clip">Voiceover_IA_Script.mp3</div>
+                        </div>
+                    </div>
+
+                    <div class="track">
+                        <div class="track-info">
+                            <span class="icon-placeholder">T</span> Subtítulos
+                        </div>
+                        <div class="track-content">
+                            <div class="clip text-clip">Capítulos...</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+
     </main>
 
-    <div class="modal-overlay" id="concierge-modal">
-        <div class="modal-box glass">
-            <button class="close-modal" onclick="toggleModal(false)">&times;</button>
-            <h2 class="modal-title">Concierge Service</h2>
-            <p class="modal-desc">Asistencia white-glove para proyectos de restauración a gran escala y requerimientos a medida.</p>
-            
-            <form id="concierge-form">
+    <div class="floating-contact" id="contact-trigger" title="Soporte y Proyectos">
+        ✉️
+    </div>
+
+    <div class="modal-overlay" id="contact-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-modal">✖</button>
+            <div class="modal-header">
+                <h2>Conecta con el Estudio</h2>
+                <p>Déjanos tus datos y describe el proyecto o fotografía que necesitas procesar. Nuestro motor automatizado está listo.</p>
+            </div>
+            <form id="auto-contact-form">
                 <div class="form-group">
-                    <input type="text" id="clientName" class="form-input" placeholder="Nombre Completo" required>
+                    <label class="form-label">Nombre o Alias</label>
+                    <input type="text" class="form-control" required placeholder="Ej. Creador Digital">
                 </div>
                 <div class="form-group">
-                    <input type="email" id="clientEmail" class="form-input" placeholder="Correo Corporativo" required>
+                    <label class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" required placeholder="correo@ejemplo.com">
                 </div>
                 <div class="form-group">
-                    <textarea id="clientDesc" class="form-input" placeholder="Describa el estado de su material o su visión creativa..." required></textarea>
+                    <label class="form-label">Descripción de la Necesidad / Proyecto</label>
+                    <textarea class="form-control" required placeholder="Ej. Necesito restaurar una foto de 1980 o editar un video automatizado..."></textarea>
                 </div>
-                <button type="submit" class="btn-primary">Solicitar Asistencia IA</button>
+                <button type="submit" class="btn-submit">Enviar al Sistema</button>
             </form>
         </div>
     </div>
 
-    <div class="toast" id="toast">
-        <span class="toast-icon">✓</span>
-        <span>Recepción confirmada. Analizando requerimientos...</span>
-    </div>
+    <div class="toast-container" id="toast-container"></div>
 
     <script>
-        // 1. TAB SWITCHING LOGIC (DOM Manipulation)
-        const tabs = document.querySelectorAll('.tab-btn');
-        const workspaces = document.querySelectorAll('.workspace');
+        document.addEventListener('DOMContentLoaded', () => {
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Remove active classes
-                tabs.forEach(t => t.classList.remove('active'));
-                workspaces.forEach(w => w.classList.remove('active'));
-                
-                // Add active class to clicked
-                tab.classList.add('active');
-                const target = tab.getAttribute('data-target');
-                document.getElementById(target).classList.add('active');
+            // 1. SISTEMA DE PESTAÑAS (TABS)
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const workspaces = document.querySelectorAll('.workspace');
+            const mainExportBtn = document.getElementById('main-export-btn');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remover active de todos
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    workspaces.forEach(w => w.classList.remove('active'));
+                    
+                    // Activar el seleccionado
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+
+                    // Cambiar texto de botón de exportación según contexto
+                    if(targetId === 'photo-lab') {
+                        mainExportBtn.innerText = 'Descargar Imagen Alta Res.';
+                    } else {
+                        mainExportBtn.innerText = 'Exportar Video HD';
+                    }
+                });
             });
-        });
 
-        // 2. BEFORE/AFTER SLIDER LOGIC
-        const slider = document.getElementById('ba-slider');
-        const imgAfter = document.getElementById('img-after');
-        const baLine = document.getElementById('ba-line');
+            // 2. LÓGICA DE FOTOGRAFÍA (DRAG & DROP Y EDICIÓN)
+            const photoDropzone = document.getElementById('photo-dropzone');
+            const photoInput = document.getElementById('photo-input');
+            const photoCanvasContainer = document.getElementById('photo-canvas-container');
+            const photoPreview = document.getElementById('photo-preview');
 
-        slider.addEventListener('input', (e) => {
-            const val = e.target.value;
-            // Move the line
-            baLine.style.left = `${val}%`;
-            // Adjust the clip-path of the after image
-            imgAfter.style.clipPath = `polygon(${val}% 0, 100% 0, 100% 100%, ${val}% 100%)`;
-        });
+            // Click para subir
+            photoDropzone.addEventListener('click', () => photoInput.click());
 
-        // 3. MODAL LOGIC
-        const modal = document.getElementById('concierge-modal');
-        function toggleModal(show) {
-            if(show) {
-                modal.classList.add('active');
-            } else {
-                modal.classList.remove('active');
+            // Eventos Drag & Drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                photoDropzone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
             }
-        }
 
-        // Close modal on outside click
-        modal.addEventListener('click', (e) => {
-            if(e.target === modal) toggleModal(false);
-        });
+            ['dragenter', 'dragover'].forEach(eventName => {
+                photoDropzone.addEventListener(eventName, () => {
+                    photoDropzone.classList.add('dragover');
+                }, false);
+            });
 
-        // 4. AUTO-RESPONSE EMAIL MOCKUP LOGIC
-        const form = document.getElementById('concierge-form');
-        const toast = document.getElementById('toast');
+            ['dragleave', 'drop'].forEach(eventName => {
+                photoDropzone.addEventListener(eventName, () => {
+                    photoDropzone.classList.remove('dragover');
+                }, false);
+            });
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault(); // Evita recarga de página
-            
-            const name = document.getElementById('clientName').value;
-            const email = document.getElementById('clientEmail').value;
-            const desc = document.getElementById('clientDesc').value;
+            photoDropzone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handlePhotoFiles(files);
+            }, false);
 
-            // =====================================================================
-            // CONFIGURACIÓN DE AUTO-RESPUESTA AQUÍ (Mockup EmailJS Integration)
-            // =====================================================================
-            // En un entorno real de producción, integrarías la API de EmailJS o similar:
-            // emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-            //     to_name: name,
-            //     to_email: email,
-            //     message: desc,
-            //     reply_message: "Hemos recibido su solicitud en nuestro Laboratorio Maestro. Nuestro motor de IA y equipo de especialistas están listos para ejecutar la restauración requerida."
-            // }).then(...)
-            
-            console.log(`Payload enviado a la IA para ${email}`);
+            photoInput.addEventListener('change', function() {
+                handlePhotoFiles(this.files);
+            });
 
-            // Simulación de latencia de red y éxito
-            const btn = form.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = "Procesando...";
-            btn.style.opacity = "0.7";
+            function handlePhotoFiles(files) {
+                if(files.length > 0) {
+                    const file = files[0];
+                    if(file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = function() {
+                            photoPreview.src = reader.result;
+                            photoDropzone.style.display = 'none';
+                            photoCanvasContainer.style.display = 'flex';
+                            showToast('Fotografía cargada en el laboratorio.');
+                        }
+                    }
+                }
+            }
 
-            setTimeout(() => {
-                // Restaurar botón y cerrar modal
-                btn.innerText = originalText;
-                btn.style.opacity = "1";
-                toggleModal(false);
-                form.reset();
-
-                // Mostrar Toast Notification de diseño exquisito
-                toast.classList.add('show');
+            // Filtros de Imagen (Simulación CSS)
+            window.setFilter = function(filterString) {
+                if(!photoPreview.src) return;
+                photoPreview.style.filter = filterString;
                 
-                // Ocultar Toast tras 4 segundos
+                // Efecto visual en UI
+                const items = document.querySelectorAll('.filter-item');
+                items.forEach(i => i.classList.remove('active'));
+                event.currentTarget.classList.add('active');
+            }
+
+            // Efectos IA Simulados
+            window.applyEffect = function(effectName) {
+                if(!photoPreview.src) {
+                    showToast('Por favor, carga una imagen primero.', 'error');
+                    return;
+                }
+                
+                showToast(`Aplicando algoritmo: ${effectName}... procesando en la nube.`);
+                
+                // Simular tiempo de carga y aplicar cambios sutiles
+                setTimeout(() => {
+                    if(effectName === 'restore') photoPreview.style.filter = 'contrast(1.1) brightness(1.05) saturate(1.1)';
+                    if(effectName === 'unscratch') photoPreview.style.filter = 'blur(0.5px) contrast(1.1)'; // Simulación rudimentaria
+                    if(effectName === 'colorize') photoPreview.style.filter = 'saturate(1.8) contrast(1.1)';
+                    if(effectName === 'upscale') photoPreview.style.transform = 'scale(1.02)';
+                    
+                    showToast(`Proceso completado con éxito.`);
+                }, 1500);
+            }
+
+            // 3. LÓGICA DE VIDEO (SIMULACIÓN BÁSICA)
+            const videoInput = document.getElementById('video-input');
+            const videoPrompt = document.getElementById('video-prompt');
+            const mainVideo = document.getElementById('main-video');
+            const playPauseBtn = document.getElementById('play-pause-btn');
+
+            videoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if(file && file.type.startsWith('video/')) {
+                    const url = URL.createObjectURL(file);
+                    mainVideo.src = url;
+                    videoPrompt.style.display = 'none';
+                    mainVideo.style.display = 'block';
+                    showToast('Video cargado en la línea de tiempo.');
+                }
+            });
+
+            playPauseBtn.addEventListener('click', () => {
+                if(!mainVideo.src) return;
+                if(mainVideo.paused) {
+                    mainVideo.play();
+                    playPauseBtn.innerText = '⏸';
+                } else {
+                    mainVideo.pause();
+                    playPauseBtn.innerText = '▶';
+                }
+            });
+
+            // Acción principal de Exportación
+            mainExportBtn.addEventListener('click', () => {
+                showToast('Iniciando renderizado en alta resolución... Preparando descarga.');
+            });
+
+
+            // 4. SISTEMA DE CONTACTO AUTOMATIZADO
+            const contactTrigger = document.getElementById('contact-trigger');
+            const contactModal = document.getElementById('contact-modal');
+            const closeModal = document.getElementById('close-modal');
+            const contactForm = document.getElementById('auto-contact-form');
+
+            contactTrigger.addEventListener('click', () => {
+                contactModal.classList.add('active');
+            });
+
+            closeModal.addEventListener('click', () => {
+                contactModal.classList.remove('active');
+            });
+
+            // Cerrar al clickear fuera del contenido
+            contactModal.addEventListener('click', (e) => {
+                if(e.target === contactModal) {
+                    contactModal.classList.remove('active');
+                }
+            });
+
+            // Manejo del formulario (Simulando EmailJS)
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Lógica de simulación de envío
+                const btnSubmit = contactForm.querySelector('.btn-submit');
+                const originalText = btnSubmit.innerText;
+                btnSubmit.innerText = 'Procesando...';
+                btnSubmit.disabled = true;
+
+                setTimeout(() => {
+                    // Restaurar botón y cerrar modal
+                    btnSubmit.innerText = originalText;
+                    btnSubmit.disabled = false;
+                    contactModal.classList.remove('active');
+                    contactForm.reset();
+
+                    // Mensaje automático requerido por la instrucción
+                    showToast("Recibimos tu mensaje y tu necesidad. Nuestro sistema está listo para procesarlo.");
+                }, 1200);
+            });
+
+            // 5. SISTEMA DE TOASTS (Notificaciones UI)
+            function showToast(message, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                
+                const icon = type === 'success' ? '✓' : '⚠';
+                const color = type === 'success' ? 'var(--accent-success)' : '#ef4444';
+                
+                toast.style.borderLeftColor = color;
+                toast.innerHTML = `<i style="color:${color}">${icon}</i> <span>${message}</span>`;
+                
+                container.appendChild(toast);
+                
+                // Animar entrada
+                requestAnimationFrame(() => {
+                    toast.classList.add('show');
+                });
+
+                // Remover después de 4 segundos
                 setTimeout(() => {
                     toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 400); // Esperar que termine la transición de salida
                 }, 4000);
+            }
 
-            }, 1200); // 1.2s delay simulado
+            // Inicialización UI
+            // Inicializar valores de sliders visualmente
+            const sliders = ['expo', 'cont', 'sharp'];
+            sliders.forEach(id => {
+                const input = document.getElementById(`slide-${id}`);
+                const display = document.getElementById(`val-${id}`);
+                if(input && display) {
+                    input.addEventListener('input', (e) => {
+                        display.innerText = e.target.value;
+                    });
+                }
+            });
         });
     </script>
 </body>
