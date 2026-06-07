@@ -3,687 +3,711 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma de Restauración y Edición - High-End</title>
+    <title>Laboratorio Audiovisual | Dialéctica Visual</title>
     <style>
         :root {
             --bg-base: #050505;
-            --bg-panel: #0d0d0d;
-            --bg-accent: #1a1a1a;
-            --text-main: #e0e0e0;
+            --bg-panel: #111111;
+            --border-brutal: #333333;
+            --text-primary: #e0e0e0;
             --text-muted: #666666;
-            --primary: #ffffff;
-            --secondary: #333333;
+            --accent: #d4af37; /* Oro pálido para el high-end */
+            --accent-hover: #f1c40f;
             --danger: #ff3333;
-            --success: #33ff77;
-            --border-thin: 1px solid #222;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             --font-mono: 'Courier New', Courier, monospace;
-            --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            --transition-speed: 0.3s;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: var(--bg-base); color: var(--text-main);
-            font-family: var(--font-sans); height: 100vh; overflow: hidden;
-            display: grid; grid-template-columns: 80px 1fr; grid-template-rows: 100vh;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        /* Nav Sidebar */
-        nav {
-            background-color: var(--bg-panel); border-right: var(--border-thin);
-            display: flex; flex-direction: column; align-items: center; padding: 2rem 0;
-            gap: 2rem; z-index: 100;
+        /* Navegación y Pestañas */
+        header {
+            border-bottom: 1px solid var(--border-brutal);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-panel);
         }
-        .nav-btn {
-            background: none; border: none; color: var(--text-muted);
-            cursor: pointer; font-size: 0.8rem; writing-mode: vertical-rl;
-            text-orientation: mixed; padding: 1rem; transition: var(--transition-speed);
-            text-transform: uppercase; letter-spacing: 2px; font-weight: bold;
-        }
-        .nav-btn:hover, .nav-btn.active { color: var(--primary); text-shadow: 0 0 10px rgba(255,255,255,0.3); }
 
-        /* Workspaces */
+        .brand {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+            border: 1px solid var(--border-brutal);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .tab-btn:hover { color: var(--accent); }
+
+        /* Contenedores Principales */
         .workspace {
-            display: none; height: 100%; width: 100%; grid-template-columns: 1fr 350px;
-            grid-template-rows: 1fr; background: var(--bg-base);
+            display: none;
+            flex: 1;
+            height: calc(100vh - 70px);
         }
-        .workspace.active { display: grid; }
-        .workspace-full { display: none; height: 100%; width: 100%; padding: 4rem; overflow-y: auto; }
-        .workspace-full.active { display: block; }
 
-        /* Viewer / Canvas Area */
-        .viewer-container {
-            position: relative; padding: 2rem; display: flex; justify-content: center;
-            align-items: center; background: radial-gradient(circle at center, #111 0%, var(--bg-base) 100%);
-            border-right: var(--border-thin); overflow: hidden;
-        }
-        .drop-zone {
-            width: 100%; height: 100%; border: 2px dashed var(--secondary);
-            display: flex; justify-content: center; align-items: center;
-            flex-direction: column; color: var(--text-muted); cursor: pointer;
-            transition: var(--transition-speed); position: absolute; z-index: 10;
-        }
-        .drop-zone.dragover { border-color: var(--primary); background: rgba(255,255,255,0.05); }
-        .drop-zone span { font-family: var(--font-mono); font-size: 0.9rem; margin-top: 1rem; }
-        .hidden { display: none !important; }
-        
-        canvas { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-        .video-wrapper { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-        video { max-width: 100%; max-height: 80%; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-        .kinetic-overlay { position: absolute; font-size: 4rem; font-weight: 900; color: white; mix-blend-mode: difference; pointer-events: none; text-transform: uppercase; }
+        .workspace.active { display: flex; }
 
-        /* Tool Panels */
-        .tools-panel {
-            background-color: var(--bg-panel); padding: 2rem; overflow-y: auto;
-            display: flex; flex-direction: column; gap: 2rem;
+        .sidebar {
+            width: 350px;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border-brutal);
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
-        .tool-group { display: flex; flex-direction: column; gap: 1rem; border-bottom: var(--border-thin); padding-bottom: 1.5rem; }
-        .tool-group:last-child { border-bottom: none; }
-        .tool-title { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        
-        /* Controls */
+
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            background: repeating-linear-gradient(45deg, #0a0a0a, #0a0a0a 10px, #080808 10px, #080808 20px);
+        }
+
+        /* Controles y Herramientas */
+        .tool-group {
+            border: 1px solid var(--border-brutal);
+            padding: 1rem;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .tool-group h3 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-family: var(--font-mono);
+        }
+
+        .slider-container { margin-bottom: 1rem; }
+        .slider-container label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+
         input[type="range"] {
-            -webkit-appearance: none; width: 100%; background: transparent;
+            width: 100%;
+            appearance: none;
+            background: var(--border-brutal);
+            height: 2px;
+            outline: none;
         }
+
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 16px; width: 8px; border-radius: 0;
-            background: var(--primary); cursor: pointer; margin-top: -6px;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            cursor: pointer;
+            border-radius: 50%;
         }
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%; height: 2px; cursor: pointer; background: var(--secondary);
-        }
-        .slider-label { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.5rem; }
-        
-        button {
-            background: var(--bg-accent); border: 1px solid var(--secondary);
-            color: var(--text-main); padding: 0.8rem 1.2rem; font-family: var(--font-mono);
-            font-size: 0.8rem; cursor: pointer; transition: var(--transition-speed);
-            text-transform: uppercase; letter-spacing: 1px; width: 100%;
-        }
-        button:hover { background: var(--primary); color: var(--bg-base); }
-        button.action-btn { background: transparent; border-color: var(--primary); color: var(--primary); }
-        button.action-btn:hover { background: var(--primary); color: var(--bg-base); box-shadow: 0 0 15px rgba(255,255,255,0.2); }
 
-        /* Video Timeline */
+        .btn {
+            background: transparent;
+            border: 1px solid var(--border-brutal);
+            color: var(--text-primary);
+            padding: 0.7rem;
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn.primary {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            font-weight: bold;
+        }
+
+        .btn.primary:hover { background: var(--accent-hover); }
+
+        /* Elementos Media */
+        #photo-canvas {
+            max-width: 100%;
+            max-height: 80vh;
+            border: 1px solid var(--border-brutal);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none;
+        }
+
+        .video-container {
+            position: relative;
+            width: 80%;
+            max-height: 60vh;
+            display: none;
+        }
+
+        #main-video {
+            width: 100%;
+            border: 1px solid var(--border-brutal);
+        }
+
+        .overlay-layer {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+        }
+
+        .draggable-text {
+            position: absolute;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
+            pointer-events: auto;
+            cursor: move;
+        }
+
+        /* Drag & Drop Overlay */
+        .drop-zone {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px dashed var(--border-brutal);
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Línea de Tiempo */
         .timeline-container {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 150px;
-            background: var(--bg-panel); border-top: var(--border-thin);
-            display: flex; flex-direction: column;
+            height: 150px;
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border-brutal);
+            position: absolute;
+            bottom: 0; left: 350px; right: 0;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
         }
-        .timeline-controls { display: flex; padding: 0.5rem 1rem; gap: 1rem; border-bottom: var(--border-thin); background: var(--bg-base); }
-        .timeline-controls button { width: auto; padding: 0.4rem 0.8rem; font-size: 0.7rem; }
-        .timeline-tracks { flex: 1; overflow-y: auto; padding: 1rem; position: relative; }
-        .track { height: 40px; background: var(--bg-accent); margin-bottom: 0.5rem; border-radius: 2px; position: relative; }
-        .clip { position: absolute; height: 100%; background: #444; border: 1px solid #666; border-radius: 2px; cursor: pointer; min-width: 10px; }
-        .playhead { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--danger); z-index: 50; pointer-events: none; }
 
-        /* CRM / Automation Center */
-        .crm-container { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem; }
-        .crm-header { font-size: 2rem; font-weight: 300; letter-spacing: -1px; }
-        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-        .form-group label { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
-        input[type="text"], input[type="email"], textarea {
-            background: var(--bg-accent); border: 1px solid var(--secondary);
-            color: var(--text-main); padding: 1rem; font-family: var(--font-sans); outline: none;
-            transition: var(--transition-speed);
+        .timeline-tracks {
+            flex: 1;
+            background: #000;
+            border: 1px solid var(--border-brutal);
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
         }
-        input[type="text"]:focus, input[type="email"]:focus, textarea:focus { border-color: var(--primary); }
-        textarea { resize: vertical; min-height: 150px; }
-        .notification {
-            position: fixed; bottom: 2rem; right: 2rem; background: var(--primary);
-            color: var(--bg-base); padding: 1.5rem 2rem; font-family: var(--font-mono);
-            font-size: 0.9rem; opacity: 0; transform: translateY(20px); transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-            z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); pointer-events: none;
-        }
-        .notification.show { opacity: 1; transform: translateY(0); }
 
-        /* Utility */
+        .playhead {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 2px;
+            background: var(--danger);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Formulario CRM */
+        .crm-container {
+            max-width: 600px;
+            margin: 4rem auto;
+            background: var(--bg-panel);
+            padding: 3rem;
+            border: 1px solid var(--border-brutal);
+        }
+
+        .input-brutal {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border-brutal);
+            color: var(--text-primary);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-family: var(--font-mono);
+        }
+        .input-brutal:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        #crm-notification {
+            display: none;
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent);
+            background: rgba(212, 175, 55, 0.1);
+            margin-top: 2rem;
+            font-family: var(--font-mono);
+            line-height: 1.6;
+        }
+
+        /* Utilidades */
+        .hidden { display: none !important; }
         input[type="file"] { display: none; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <button class="nav-btn active" data-target="photo-lab">Lab Fotográfico</button>
-        <button class="nav-btn" data-target="video-studio">Estudio Audiovisual</button>
-        <button class="nav-btn" data-target="automation-center">Centro Auto</button>
-    </nav>
-
-    <div id="photo-lab" class="workspace active">
-        <div class="viewer-container" id="photo-viewer">
-            <div class="drop-zone" id="photo-drop">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                <span>ARRASTRAR MATERIAL RAW / CLIC</span>
-                <input type="file" id="photo-input" accept="image/*">
-            </div>
-            <canvas id="photo-canvas" class="hidden"></canvas>
+    <header>
+        <div class="brand">Laboratorio M-7 // Sistema Élite</div>
+        <div class="tabs">
+            <button class="tab-btn active" data-target="photo-lab">Lab Fotográfico</button>
+            <button class="tab-btn" data-target="video-studio">Estudio Audiovisual</button>
+            <button class="tab-btn" data-target="automation-crm">Centro de Automatización</button>
         </div>
-        
-        <div class="tools-panel">
+    </header>
+
+    <main id="photo-lab" class="workspace active">
+        <aside class="sidebar">
             <div class="tool-group">
-                <div class="tool-title">Exposición & Luz (Matriz Base)</div>
-                <div>
-                    <div class="slider-label"><span>Brillo</span><span id="val-brightness">0</span></div>
-                    <input type="range" id="adj-brightness" min="-100" max="100" value="0">
-                </div>
-                <div>
-                    <div class="slider-label"><span>Contraste</span><span id="val-contrast">0</span></div>
-                    <input type="range" id="adj-contrast" min="-100" max="100" value="0">
-                </div>
-                <div>
-                    <div class="slider-label"><span>Saturación</span><span id="val-saturation">0</span></div>
-                    <input type="range" id="adj-saturation" min="-100" max="100" value="0">
-                </div>
+                <h3>Ingesta Algorítmica</h3>
+                <input type="file" id="photo-upload" accept="image/*">
+                <button class="btn" onclick="document.getElementById('photo-upload').click()">Cargar Imagen</button>
             </div>
 
             <div class="tool-group">
-                <div class="tool-title">Restauración Algorítmica</div>
-                <button id="btn-scratch">Eliminación de Rasguños (Heurística)</button>
-                <button id="btn-noise">Análisis Ruido Topológico</button>
-                <button id="btn-aberration">Corrección Aberración Cromática</button>
+                <h3>Manipulación Topológica</h3>
+                <button class="btn" id="btn-scratch">Eliminación de Rasguños (Simulación IA)</button>
+                <button class="btn" id="btn-color">Restauración de Pigmentos</button>
+                <button class="btn" id="btn-noise">Análisis de Ruido y Denoise</button>
+                <button class="btn" id="btn-aberration">Corrección Aberración Cromática</button>
             </div>
 
             <div class="tool-group">
-                <div class="tool-title">Filtros LUT (Simulación)</div>
-                <button id="btn-lut-kodak">Kodak Portra 400</button>
-                <button id="btn-lut-cinematic">Cine Teal & Orange</button>
-                <button id="btn-lut-bw">Monocromo Platino</button>
+                <h3>Ajustes Histograma Real</h3>
+                <div class="slider-container">
+                    <label>Brillo <span id="val-brightness">0</span></label>
+                    <input type="range" id="sl-brightness" min="-100" max="100" value="0">
+                </div>
+                <div class="slider-container">
+                    <label>Contraste <span id="val-contrast">0</span></label>
+                    <input type="range" id="sl-contrast" min="-100" max="100" value="0">
+                </div>
+                <div class="slider-container">
+                    <label>Saturación <span id="val-saturation">0</span></label>
+                    <input type="range" id="sl-saturation" min="-100" max="100" value="0">
+                </div>
+                <button class="btn" id="btn-reset-filters">Resetear Filtros</button>
             </div>
 
-            <div class="tool-group" style="margin-top: auto;">
-                <button id="btn-reset">Restablecer Matriz</button>
-                <button id="btn-export-photo" class="action-btn">Exportar RAW Mapeado</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="video-studio" class="workspace">
-        <div class="viewer-container" style="flex-direction: column; padding: 0;">
-            <div class="video-wrapper" id="video-drop">
-                <div class="drop-zone" id="vid-drop-indicator">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-                    <span>INGESTA DE METRAJE (MP4, WEBM)</span>
-                    <input type="file" id="video-input" accept="video/*">
-                </div>
-                <video id="main-video" class="hidden" src=""></video>
-            </div>
-            
-            <div class="timeline-container">
-                <div class="timeline-controls">
-                    <button id="btn-play">PLAY</button>
-                    <button id="btn-pause">PAUSE</button>
-                    <button id="btn-add-text">INSERTAR TEXTO CINÉTICO</button>
-                </div>
-                <div class="timeline-tracks" id="timeline-tracks">
-                    <div class="playhead" id="playhead"></div>
-                    <div class="track" id="track-video">
-                        </div>
-                    <div class="track" id="track-overlay">
-                        </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="tools-panel">
             <div class="tool-group">
-                <div class="tool-title">Gradación en Tiempo Real</div>
-                <div>
-                    <div class="slider-label"><span>Filtro: Sepia</span><span id="val-vid-sepia">0%</span></div>
-                    <input type="range" id="vid-sepia" min="0" max="100" value="0">
+                <h3>Exportación Prístina</h3>
+                <button class="btn primary" id="btn-export-photo">Renderizar y Descargar</button>
+            </div>
+        </aside>
+
+        <section class="canvas-area" id="photo-dropzone">
+            <div class="drop-zone" id="photo-dz-text">
+                [ DRAG & DROP ]<br><br>Inicializar Matriz de Píxeles
+            </div>
+            <canvas id="photo-canvas"></canvas>
+        </section>
+    </main>
+
+    <main id="video-studio" class="workspace">
+        <aside class="sidebar">
+            <div class="tool-group">
+                <h3>Ingesta de Metraje</h3>
+                <input type="file" id="video-upload" accept="video/*">
+                <button class="btn" onclick="document.getElementById('video-upload').click()">Cargar Secuencia</button>
+            </div>
+
+            <div class="tool-group">
+                <h3>Montaje y Cinética</h3>
+                <button class="btn" id="btn-play-pause">[ > ] Play / Pause</button>
+                <button class="btn" id="btn-add-text">+ Inyectar Superposición de Texto</button>
+                <button class="btn" id="btn-add-sticker">+ Inyectar Sticker</button>
+            </div>
+
+            <div class="tool-group">
+                <h3>Color Grading (Tiempo Real)</h3>
+                <div class="slider-container">
+                    <label>LUT: Temperatura <span id="val-v-temp">0</span></label>
+                    <input type="range" id="sl-v-temp" min="-50" max="50" value="0">
                 </div>
-                <div>
-                    <div class="slider-label"><span>Filtro: Invertir</span><span id="val-vid-invert">0%</span></div>
-                    <input type="range" id="vid-invert" min="0" max="100" value="0">
-                </div>
-                <div>
-                    <div class="slider-label"><span>Velocidad Reproducción</span><span id="val-vid-speed">1x</span></div>
-                    <input type="range" id="vid-speed" min="0.25" max="2" step="0.25" value="1">
+                <div class="slider-container">
+                    <label>LUT: Sombras <span id="val-v-shadow">0</span></label>
+                    <input type="range" id="sl-v-shadow" min="-50" max="50" value="0">
                 </div>
             </div>
-            
-            <div class="tool-group" style="margin-top: auto;">
-                 <button id="btn-export-video" class="action-btn">Generar Blob (Descarga)</button>
+
+            <div class="tool-group">
+                <h3>Exportación Asíncrona</h3>
+                <button class="btn primary" id="btn-export-video">Compilar Objeto Blob (Descargar)</button>
+            </div>
+        </aside>
+
+        <section class="canvas-area" id="video-dropzone" style="height: calc(100vh - 220px);">
+            <div class="drop-zone" id="video-dz-text">
+                [ DRAG & DROP ]<br><br>Montar Flujo Audiovisual
+            </div>
+            <div class="video-container" id="video-wrapper">
+                <video id="main-video" crossorigin="anonymous"></video>
+                <div class="overlay-layer" id="video-overlays"></div>
+            </div>
+        </section>
+
+        <div class="timeline-container">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem; font-family:var(--font-mono); font-size:0.8rem; color:var(--text-muted);">
+                <span>00:00:00:00</span>
+                <span>Render Track V1 / A1</span>
+                <span id="time-display">00:00:00:00</span>
+            </div>
+            <div class="timeline-tracks" id="timeline-track">
+                <div class="playhead" id="playhead"></div>
+                </div>
+        </div>
+    </main>
+
+    <main id="automation-crm" class="workspace">
+        <div style="width: 100%; display:flex; justify-content:center; align-items:flex-start; overflow-y:auto;">
+            <div class="crm-container">
+                <h2 style="margin-bottom: 2rem; font-weight: 300; border-bottom: 1px solid var(--border-brutal); padding-bottom: 1rem;">Protocolo de Recepción Dialéctica</h2>
+                
+                <form id="crm-form">
+                    <input type="email" id="crm-email" class="input-brutal" placeholder="IDENTIFICADOR [Correo Electrónico]" required>
+                    <textarea id="crm-needs" class="input-brutal" rows="6" placeholder="ARTICULACIÓN DE LA NECESIDAD VISUAL / DEFECTOS TOPOLÓGICOS..." required></textarea>
+                    
+                    <button type="submit" class="btn primary" style="font-size: 1rem; padding: 1rem;">Ejecutar Transmisión al Motor</button>
+                </form>
+
+                <div id="crm-notification"></div>
             </div>
         </div>
-    </div>
-
-    <div id="automation-center" class="workspace-full">
-        <div class="crm-container">
-            <h1 class="crm-header">Conexión Dialéctica.</h1>
-            <p style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.9rem;">
-                Inicia la parametrización de tu proyecto visual. Nuestro ecosistema procesará tu input.
-            </p>
-            <form id="crm-form">
-                <div class="form-group">
-                    <label for="crm-name">IDENTIFICADOR DE ENTIDAD</label>
-                    <input type="text" id="crm-name" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label for="crm-email">VECTOR DE COMUNICACIÓN (EMAIL)</label>
-                    <input type="email" id="crm-email" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label for="crm-project">TOPOLOGÍA DEL PROYECTO</label>
-                    <textarea id="crm-project" required></textarea>
-                </div>
-                <button type="submit" class="action-btn" style="margin-top: 1rem;">INICIALIZAR PROCESO</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="notification" id="sys-notification">
-        Hemos recibido la dialéctica de tu necesidad visual. Nuestro motor algorítmico está procesando tu solicitud para devolverte un resultado prístino.
-    </div>
+    </main>
 
     <script>
-        // --- CORE SYSTEM ARCHITECTURE ---
-        const UI = {
-            navBtns: document.querySelectorAll('.nav-btn'),
-            workspaces: document.querySelectorAll('.workspace, .workspace-full'),
-            notification: document.getElementById('sys-notification')
-        };
+        /** * ARQUITECTURA DE SOFTWARE FULL-STACK - NÚCLEO JS
+         * Manipulación Material de DOM, Canvas, File API y Web Video API
+         */
 
-        // Navigation Routing
-        UI.navBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                UI.navBtns.forEach(b => b.classList.remove('active'));
-                UI.workspaces.forEach(w => w.classList.remove('active'));
+        // --- SISTEMA DE PESTAÑAS ---
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const workspaces = document.querySelectorAll('.workspace');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                workspaces.forEach(w => w.classList.remove('active'));
                 
-                const target = e.target;
-                target.classList.add('active');
-                document.getElementById(target.dataset.target).classList.add('active');
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.target).classList.add('active');
             });
         });
 
-        // Notification System
-        const notify = (msg = null) => {
-            if(msg) UI.notification.innerText = msg;
-            UI.notification.classList.add('show');
-            setTimeout(() => UI.notification.classList.remove('show'), 4000);
-        };
+        // --- LABORATORIO FOTOGRÁFICO: MATERIALIDAD DEL CANVAS ---
+        const photoUpload = document.getElementById('photo-upload');
+        const photoCanvas = document.getElementById('photo-canvas');
+        const ctx = photoCanvas.getContext('2d', { willReadFrequently: true });
+        const photoDzText = document.getElementById('photo-dz-text');
+        
+        let originalImage = new Image();
+        let currentImageData = null;
 
-        // --- WORKSPACE 1: PHOTO LAB LOGIC ---
-        const PhotoLab = {
-            dropZone: document.getElementById('photo-drop'),
-            input: document.getElementById('photo-input'),
-            canvas: document.getElementById('photo-canvas'),
-            ctx: document.getElementById('photo-canvas').getContext('2d', { willReadFrequently: true }),
-            originalImage: null,
-            imgDataOriginal: null,
-            
-            // Adjustments
-            controls: {
-                bright: document.getElementById('adj-brightness'),
-                contrast: document.getElementById('adj-contrast'),
-                sat: document.getElementById('adj-saturation')
-            },
-            labels: {
-                bright: document.getElementById('val-brightness'),
-                contrast: document.getElementById('val-contrast'),
-                sat: document.getElementById('val-saturation')
-            },
+        // Ingesta Drag & Drop
+        const photoDropzone = document.getElementById('photo-dropzone');
+        photoDropzone.addEventListener('dragover', (e) => { e.preventDefault(); photoDzText.classList.add('dragover'); });
+        photoDropzone.addEventListener('dragleave', () => photoDzText.classList.remove('dragover'));
+        photoDropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            photoDzText.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                processImageFile(e.dataTransfer.files[0]);
+            }
+        });
 
-            init() {
-                // Ingestion Events
-                this.dropZone.addEventListener('click', () => this.input.click());
-                this.dropZone.addEventListener('dragover', (e) => { e.preventDefault(); this.dropZone.classList.add('dragover'); });
-                this.dropZone.addEventListener('dragleave', () => this.dropZone.classList.remove('dragover'));
-                this.dropZone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    this.dropZone.classList.remove('dragover');
-                    if (e.dataTransfer.files.length) this.loadImage(e.dataTransfer.files[0]);
-                });
-                this.input.addEventListener('change', (e) => {
-                    if (e.target.files.length) this.loadImage(e.target.files[0]);
-                });
+        photoUpload.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) processImageFile(e.target.files[0]);
+        });
 
-                // Sliders Events
-                Object.keys(this.controls).forEach(key => {
-                    this.controls[key].addEventListener('input', (e) => {
-                        this.labels[key].innerText = e.target.value;
-                        this.applyMatrix();
-                    });
-                });
-
-                // Tools
-                document.getElementById('btn-reset').addEventListener('click', () => this.resetMatrix());
-                document.getElementById('btn-scratch').addEventListener('click', () => this.simulateScratchRemoval());
-                document.getElementById('btn-noise').addEventListener('click', () => this.analyzeTopologicalNoise());
-                document.getElementById('btn-aberration').addEventListener('click', () => this.correctChromaticAberration());
-                
-                // LUTs
-                document.getElementById('btn-lut-kodak').addEventListener('click', () => this.applyLUT('kodak'));
-                document.getElementById('btn-lut-cinematic').addEventListener('click', () => this.applyLUT('cinematic'));
-                document.getElementById('btn-lut-bw').addEventListener('click', () => this.applyLUT('bw'));
-
-                // Export
-                document.getElementById('btn-export-photo').addEventListener('click', () => this.exportRAW());
-            },
-
-            loadImage(file) {
-                if (!file.type.startsWith('image/')) return notify("ERROR: Formato no ontológico.");
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        this.canvas.width = img.width;
-                        this.canvas.height = img.height;
-                        this.ctx.drawImage(img, 0, 0);
-                        this.originalImage = img;
-                        this.imgDataOriginal = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-                        this.dropZone.classList.add('hidden');
-                        this.canvas.classList.remove('hidden');
-                        this.resetMatrix();
-                    };
-                    img.src = e.target.result;
+        function processImageFile(file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                originalImage.onload = () => {
+                    photoDzText.style.display = 'none';
+                    photoCanvas.style.display = 'block';
+                    
+                    // Ajustar dimensiones
+                    const maxWidth = 1200;
+                    let scale = 1;
+                    if (originalImage.width > maxWidth) scale = maxWidth / originalImage.width;
+                    
+                    photoCanvas.width = originalImage.width * scale;
+                    photoCanvas.height = originalImage.height * scale;
+                    
+                    ctx.drawImage(originalImage, 0, 0, photoCanvas.width, photoCanvas.height);
+                    currentImageData = ctx.getImageData(0, 0, photoCanvas.width, photoCanvas.height);
+                    applyFilters(); // Reset filtros iniciales
                 };
-                reader.readAsDataURL(file);
-            },
+                originalImage.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
 
-            applyMatrix() {
-                if (!this.imgDataOriginal) return;
-                const b = parseInt(this.controls.bright.value);
-                const c = parseInt(this.controls.contrast.value);
-                const s = parseInt(this.controls.sat.value);
+        // Filtros en Tiempo Real (Manipulación de Píxeles y Filtros CSS)
+        const slBrightness = document.getElementById('sl-brightness');
+        const slContrast = document.getElementById('sl-contrast');
+        const slSaturation = document.getElementById('sl-saturation');
 
-                const imgData = new ImageData(
-                    new Uint8ClampedArray(this.imgDataOriginal.data),
-                    this.imgDataOriginal.width,
-                    this.imgDataOriginal.height
-                );
-                
-                const data = imgData.data;
-                const factor = (259 * (c + 255)) / (255 * (259 - c));
-
-                for (let i = 0; i < data.length; i += 4) {
-                    // Brightness & Contrast
-                    for(let j=0; j<3; j++) {
-                        let val = data[i+j] + b; // bright
-                        val = factor * (val - 128) + 128; // contrast
-                        data[i+j] = val;
-                    }
-
-                    // Saturation
-                    const r = data[i], g = data[i+1], bl = data[i+2];
-                    const max = Math.max(r, g, bl), min = Math.min(r, g, bl);
-                    const l = (max + min) / 2;
-                    
-                    if (s !== 0) {
-                        const satFactor = 1 + (s / 100);
-                        data[i] = l + (r - l) * satFactor;
-                        data[i+1] = l + (g - l) * satFactor;
-                        data[i+2] = l + (bl - l) * satFactor;
-                    }
-                }
-                this.ctx.putImageData(imgData, 0, 0);
-            },
-
-            resetMatrix() {
-                if(!this.originalImage) return;
-                this.controls.bright.value = 0;
-                this.controls.contrast.value = 0;
-                this.controls.sat.value = 0;
-                Object.keys(this.labels).forEach(k => this.labels[k].innerText = "0");
-                this.ctx.putImageData(this.imgDataOriginal, 0, 0);
-            },
-
-            // Advanced Algorithmic Manipulations via Canvas Pixels
-            simulateScratchRemoval() {
-                if(!this.imgDataOriginal) return;
-                // High-End logic approximation: Median filter blur targeting high-contrast micro-lines
-                notify("Ejecutando heurística de relleno morfológico...");
-                setTimeout(() => {
-                    // Due to single-thread JS constraints, applying a pseudo-blur over specific threshold
-                    const imgData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-                    const data = imgData.data;
-                    const w = this.canvas.width;
-                    
-                    for (let i = 0; i < data.length; i += 4) {
-                        // Look for near-white or near-black specs (scratches)
-                        const lum = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
-                        if (lum > 240 || lum < 15) {
-                            // Interpolate from neighbors
-                            let n_idx = i - (w * 4);
-                            if(n_idx > 0 && n_idx < data.length) {
-                                data[i] = data[n_idx];
-                                data[i+1] = data[n_idx+1];
-                                data[i+2] = data[n_idx+2];
-                            }
-                        }
-                    }
-                    this.ctx.putImageData(imgData, 0, 0);
-                }, 100);
-            },
-
-            analyzeTopologicalNoise() {
-                if(!this.imgDataOriginal) return;
-                notify("Calculando mapa topológico y aislando frecuencias espaciales...");
-                // Simulates a high-pass filter isolation visualization
-                const imgData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-                const data = imgData.data;
-                for (let i = 0; i < data.length; i += 4) {
-                    const diff = Math.abs(data[i] - data[i+4] || data[i]);
-                    data[i] = diff * 5;     // R
-                    data[i+1] = diff * 5;   // G
-                    data[i+2] = diff * 5;   // B
-                }
-                this.ctx.putImageData(imgData, 0, 0);
-                setTimeout(() => this.applyMatrix(), 2000); // Revert after showing map
-            },
-
-            correctChromaticAberration() {
-                if(!this.imgDataOriginal) return;
-                notify("Alineando canales RGB divergentes en micro-píxeles...");
-                const imgData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-                const data = imgData.data;
-                const shift = 4; // shift Red channel left
-                const shiftedData = new Uint8ClampedArray(data);
-                
-                for (let i = 0; i < data.length; i += 4) {
-                    if (i - shift >= 0) {
-                        data[i] = shiftedData[i - shift]; // Shift Red
-                    }
-                }
-                this.ctx.putImageData(imgData, 0, 0);
-            },
-
-            applyLUT(type) {
-                if(!this.imgDataOriginal) return;
-                this.applyMatrix(); // Base state
-                const imgData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-                const data = imgData.data;
-
-                for (let i = 0; i < data.length; i += 4) {
-                    let r = data[i], g = data[i+1], b = data[i+2];
-
-                    if (type === 'kodak') {
-                        // Warmth, slight magenta tint in shadows, green in highlights
-                        data[i] = Math.min(255, r * 1.1 + 10);
-                        data[i+1] = g * 0.95;
-                        data[i+2] = b * 0.85;
-                    } else if (type === 'cinematic') {
-                        // Orange highlights, Teal shadows
-                        const lum = 0.299*r + 0.587*g + 0.114*b;
-                        if (lum > 128) {
-                            data[i] = Math.min(255, r * 1.2);
-                            data[i+1] = Math.min(255, g * 1.05);
-                            data[i+2] = b * 0.8;
-                        } else {
-                            data[i] = r * 0.8;
-                            data[i+1] = Math.min(255, g * 1.1);
-                            data[i+2] = Math.min(255, b * 1.3);
-                        }
-                    } else if (type === 'bw') {
-                        // High contrast platinum monochrome
-                        const gray = r * 0.3 + g * 0.59 + b * 0.11;
-                        const contrast = 1.2;
-                        const finalGray = ((gray/255 - 0.5) * contrast + 0.5) * 255;
-                        data[i] = data[i+1] = data[i+2] = finalGray;
-                    }
-                }
-                this.ctx.putImageData(imgData, 0, 0);
-            },
-
-            exportRAW() {
-                if(!this.originalImage) return;
-                this.canvas.toBlob((blob) => {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `high_end_render_${Date.now()}.png`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    notify("Exportación fotográfica materializada exitosamente.");
-                }, 'image/png');
-            }
+        const updateFilterVals = () => {
+            document.getElementById('val-brightness').innerText = slBrightness.value;
+            document.getElementById('val-contrast').innerText = slContrast.value;
+            document.getElementById('val-saturation').innerText = slSaturation.value;
+            applyFilters();
         };
 
-        // --- WORKSPACE 2: VIDEO STUDIO LOGIC ---
-        const VideoStudio = {
-            dropZone: document.getElementById('vid-drop-indicator'),
-            input: document.getElementById('video-input'),
-            video: document.getElementById('main-video'),
-            wrapper: document.getElementById('video-drop'),
+        slBrightness.addEventListener('input', updateFilterVals);
+        slContrast.addEventListener('input', updateFilterVals);
+        slSaturation.addEventListener('input', updateFilterVals);
+
+        document.getElementById('btn-reset-filters').addEventListener('click', () => {
+            slBrightness.value = 0; slContrast.value = 0; slSaturation.value = 0;
+            updateFilterVals();
+            if(currentImageData) ctx.putImageData(currentImageData, 0, 0);
+        });
+
+        function applyFilters() {
+            if (!currentImageData) return;
+            const b = parseInt(slBrightness.value);
+            const c = parseInt(slContrast.value);
+            const s = parseInt(slSaturation.value);
             
-            timeline: {
-                playhead: document.getElementById('playhead'),
-                trackVideo: document.getElementById('track-video'),
-                trackOverlay: document.getElementById('track-overlay')
-            },
+            // Re-dibujar base
+            ctx.drawImage(originalImage, 0, 0, photoCanvas.width, photoCanvas.height);
+            
+            // Aplicar CSS Filters al contexto para alto rendimiento antes de manipulaciones complejas
+            ctx.filter = `brightness(${100 + b}%) contrast(${100 + c}%) saturate(${100 + s}%)`;
+            ctx.drawImage(photoCanvas, 0, 0); // Hack para aplicar filtro sobre sí mismo
+            ctx.filter = 'none'; // Reset para no apilar
+        }
 
-            filters: {
-                sepia: document.getElementById('vid-sepia'),
-                invert: document.getElementById('vid-invert'),
-                speed: document.getElementById('vid-speed')
-            },
+        // Algoritmos Complejos Simulados (Manipulación directa del buffer de píxeles)
+        document.getElementById('btn-scratch').addEventListener('click', () => {
+            if(!currentImageData) return;
+            // Simulación de Inpainting: Aplicar un ligero desenfoque mediano y aumentar micro-contraste
+            ctx.filter = 'blur(1px) contrast(110%)';
+            ctx.drawImage(photoCanvas, 0, 0);
+            ctx.filter = 'none';
+            alert("Algoritmo de eliminación de rasguños ejecutado topológicamente.");
+        });
 
-            init() {
-                // Ingestion
-                this.dropZone.parentElement.addEventListener('click', (e) => {
-                    if(!this.video.src) this.input.click();
-                });
-                this.input.addEventListener('change', (e) => {
-                    if (e.target.files.length) this.loadVideo(e.target.files[0]);
-                });
+        document.getElementById('btn-color').addEventListener('click', () => {
+            if(!currentImageData) return;
+            // Simulación de colorización (Sepia avanzado + Sat)
+            ctx.filter = 'sepia(80%) saturate(200%) hue-rotate(-10deg)';
+            ctx.drawImage(photoCanvas, 0, 0);
+            ctx.filter = 'none';
+        });
 
-                // Playback Controls
-                document.getElementById('btn-play').addEventListener('click', () => this.video.play());
-                document.getElementById('btn-pause').addEventListener('click', () => this.video.pause());
-                
-                // Timeline sync
-                this.video.addEventListener('timeupdate', () => this.updatePlayhead());
-                this.video.addEventListener('loadedmetadata', () => this.buildTimeline());
+        document.getElementById('btn-noise').addEventListener('click', () => {
+             if(!currentImageData) return;
+             // Simulación Denoise
+             ctx.filter = 'blur(0.5px)';
+             ctx.drawImage(photoCanvas, 0, 0);
+             ctx.filter = 'none';
+             alert("Reducción de ruido topológico completada.");
+        });
 
-                // Overlay
-                document.getElementById('btn-add-text').addEventListener('click', () => this.addKineticText());
-
-                // Filters
-                Object.keys(this.filters).forEach(k => {
-                    this.filters[k].addEventListener('input', (e) => this.applyVideoFilters());
-                });
-
-                // Export
-                document.getElementById('btn-export-video').addEventListener('click', () => this.exportVideo());
-            },
-
-            loadVideo(file) {
-                if (!file.type.startsWith('video/')) return notify("ERROR: Entidad no audiovisual.");
-                const url = URL.createObjectURL(file);
-                this.video.src = url;
-                this.dropZone.classList.add('hidden');
-                this.video.classList.remove('hidden');
-            },
-
-            buildTimeline() {
-                const duration = this.video.duration;
-                // Build video clip rep
-                this.timeline.trackVideo.innerHTML = '';
-                const clip = document.createElement('div');
-                clip.className = 'clip';
-                clip.style.width = '100%';
-                clip.style.left = '0';
-                this.timeline.trackVideo.appendChild(clip);
-            },
-
-            updatePlayhead() {
-                if(!this.video.duration) return;
-                const percent = (this.video.currentTime / this.video.duration) * 100;
-                this.timeline.playhead.style.left = `${percent}%`;
-            },
-
-            addKineticText() {
-                if(!this.video.src) return;
-                const text = prompt("Ingrese variable de texto cinético:");
-                if(!text) return;
-                
-                const div = document.createElement('div');
-                div.className = 'kinetic-overlay';
-                div.innerText = text;
-                // Random position
-                div.style.top = `${Math.random() * 60}%`;
-                div.style.left = `${Math.random() * 60}%`;
-                
-                this.wrapper.appendChild(div);
-
-                // Add to timeline rep
-                const overlayClip = document.createElement('div');
-                overlayClip.className = 'clip';
-                overlayClip.style.background = 'var(--primary)';
-                overlayClip.style.width = '20%';
-                overlayClip.style.left = `${(this.video.currentTime / this.video.duration) * 100}%`;
-                this.timeline.trackOverlay.appendChild(overlayClip);
-            },
-
-            applyVideoFilters() {
-                const s = this.filters.sepia.value;
-                const i = this.filters.invert.value;
-                
-                document.getElementById('val-vid-sepia').innerText = `${s}%`;
-                document.getElementById('val-vid-invert').innerText = `${i}%`;
-                
-                this.video.style.filter = `sepia(${s}%) invert(${i}%)`;
-                
-                const speed = this.filters.speed.value;
-                document.getElementById('val-vid-speed').innerText = `${speed}x`;
-                this.video.playbackRate = parseFloat(speed);
-            },
-
-            exportVideo() {
-                if(!this.video.src) return;
-                // Fetching the blob URL to download direct (Filter/Overlay burn-in requires canvas stream recording)
-                // For monolithic absolute requirement, we export the original ingested blob link
+        // Exportación de Foto (Blob)
+        document.getElementById('btn-export-photo').addEventListener('click', () => {
+            if (!currentImageData) return;
+            photoCanvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = this.video.src;
-                a.download = `high_end_video_${Date.now()}.mp4`;
-                document.body.appendChild(a);
+                a.href = url;
+                a.download = `restauracion_m7_${Date.now()}.png`;
                 a.click();
-                document.body.removeChild(a);
-                notify("Descarga audiovisual inicializada en el navegador.");
+                URL.revokeObjectURL(url);
+            }, 'image/png', 1.0);
+        });
+
+
+        // --- ESTUDIO AUDIOVISUAL: HEGEMONÍA DEL DOM ---
+        const videoUpload = document.getElementById('video-upload');
+        const mainVideo = document.getElementById('main-video');
+        const videoWrapper = document.getElementById('video-wrapper');
+        const videoDzText = document.getElementById('video-dz-text');
+        const btnPlayPause = document.getElementById('btn-play-pause');
+        const playhead = document.getElementById('playhead');
+        const timeDisplay = document.getElementById('time-display');
+        const overlaysContainer = document.getElementById('video-overlays');
+
+        let videoURL = null;
+
+        videoUpload.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) processVideoFile(e.target.files[0]);
+        });
+
+        function processVideoFile(file) {
+            if(videoURL) URL.revokeObjectURL(videoURL);
+            videoURL = URL.createObjectURL(file);
+            mainVideo.src = videoURL;
+            videoDzText.style.display = 'none';
+            videoWrapper.style.display = 'block';
+            mainVideo.load();
+        }
+
+        btnPlayPause.addEventListener('click', () => {
+            if (mainVideo.paused) {
+                mainVideo.play();
+                btnPlayPause.innerText = "[ || ] Pause";
+            } else {
+                mainVideo.pause();
+                btnPlayPause.innerText = "[ > ] Play";
             }
+        });
+
+        // Línea de Tiempo Cinética
+        mainVideo.addEventListener('timeupdate', () => {
+            if(!mainVideo.duration) return;
+            const percentage = (mainVideo.currentTime / mainVideo.duration) * 100;
+            playhead.style.left = `${percentage}%`;
+            
+            // Formatear tiempo
+            const mins = Math.floor(mainVideo.currentTime / 60).toString().padStart(2, '0');
+            const secs = Math.floor(mainVideo.currentTime % 60).toString().padStart(2, '0');
+            const ms = Math.floor((mainVideo.currentTime % 1) * 100).toString().padStart(2, '0');
+            timeDisplay.innerText = `00:${mins}:${secs}:${ms}`;
+        });
+
+        // Superposiciones (Textos y Stickers arrastrables)
+        document.getElementById('btn-add-text').addEventListener('click', () => {
+            if(!videoURL) return;
+            createDraggableOverlay('NUEVO TEXTO', true);
+        });
+
+        document.getElementById('btn-add-sticker').addEventListener('click', () => {
+            if(!videoURL) return;
+            createDraggableOverlay('🔥', false);
+        });
+
+        function createDraggableOverlay(content, isText) {
+            const el = document.createElement('div');
+            el.className = 'draggable-text';
+            el.innerText = content;
+            if(isText) el.contentEditable = true;
+            el.style.left = '40%';
+            el.style.top = '40%';
+            if(!isText) el.style.fontSize = '48px';
+            
+            // Lógica básica de arrastre
+            let isDragging = false;
+            let startX, startY, initialX, initialY;
+
+            el.addEventListener('mousedown', (e) => {
+                if(e.target !== el) return;
+                isDragging = true;
+                startX = e.clientX; startY = e.clientY;
+                initialX = el.offsetLeft; initialY = el.offsetTop;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if(!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                el.style.left = `${initialX + dx}px`;
+                el.style.top = `${initialY + dy}px`;
+            });
+
+            document.addEventListener('mouseup', () => { isDragging = false; });
+            overlaysContainer.appendChild(el);
+        }
+
+        // Color Grading Video
+        const slVTemp = document.getElementById('sl-v-temp');
+        const slVShadow = document.getElementById('sl-v-shadow');
+        
+        const updateVideoFilters = () => {
+            document.getElementById('val-v-temp').innerText = slVTemp.value;
+            document.getElementById('val-v-shadow').innerText = slVShadow.value;
+            
+            const hue = parseInt(slVTemp.value) * 2; // Simulación de temp
+            const shadow = parseInt(slVShadow.value);
+            mainVideo.style.filter = `hue-rotate(${hue}deg) brightness(${100 + shadow}%) contrast(110%)`;
         };
 
-        // --- WORKSPACE 3: AUTOMATION CRM ---
-        const CRM = {
-            form: document.getElementById('crm-form'),
-            init() {
-                this.form.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.form.reset();
-                    // Interception logica - Mensaje exacto requerido
-                    document.getElementById('sys-notification').innerText = "Hemos recibido la dialéctica de tu necesidad visual. Nuestro motor algorítmico está procesando tu solicitud para devolverte un resultado prístino.";
-                    notify();
-                });
-            }
-        };
+        slVTemp.addEventListener('input', updateVideoFilters);
+        slVShadow.addEventListener('input', updateVideoFilters);
 
-        // Bootstrap Ecosystem
-        document.addEventListener('DOMContentLoaded', () => {
-            PhotoLab.init();
-            VideoStudio.init();
-            CRM.init();
+        // Exportación Asíncrona (Simulada para Blob directo por límite de navegador sin MediaRecorder profundo)
+        document.getElementById('btn-export-video').addEventListener('click', () => {
+            if (!videoURL) return alert("Secuencia no inicializada.");
+            // En un flujo real avanzado, se usaría MediaRecorder sobre un canvas que dibuja el video frame a frame
+            // Aquí entregamos el blob del source actual como prueba de materialidad de guardado
+            const a = document.createElement('a');
+            a.href = videoURL;
+            a.download = `secuencia_m7_${Date.now()}.mp4`;
+            a.click();
+        });
+
+
+        // --- CRM Y AUTOMATIZACIÓN DE CONTACTO ---
+        const crmForm = document.getElementById('crm-form');
+        const crmNotif = document.getElementById('crm-notification');
+
+        crmForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Obtener y limpiar datos
+            const email = document.getElementById('crm-email').value;
+            
+            // Disparar Notificación Exigida
+            crmNotif.innerHTML = `<strong>SISTEMA AUTOMATIZADO:</strong><br><br>Hemos recibido la dialéctica de tu necesidad visual. Nuestro motor algorítmico está procesando tu solicitud para devolverte un resultado prístino.<br><br><em>[Acknowledge: ${email}]</em>`;
+            crmNotif.style.display = 'block';
+            
+            // Limpiar fricción
+            crmForm.reset();
+            
+            // Ocultar tras 10 segundos
+            setTimeout(() => { crmNotif.style.display = 'none'; }, 10000);
         });
 
     </script>
