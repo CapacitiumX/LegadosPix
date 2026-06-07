@@ -2,59 +2,81 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexusPro Edit | Professional Multimedia Suite</title>
-    <link rel="stylesheet" href="css/main.css">
+    <title>Aether Restoration Suite | Enterprise Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0a0a0a; color: #e5e7eb; font-family: 'Inter', sans-serif; }
+        .sidebar { background: #121212; border-right: 1px solid #262626; }
+        .tool-btn { @apply text-left px-4 py-2 hover:bg-blue-600 hover:text-white transition-all text-xs uppercase font-bold; }
+        canvas { background: #000; border: 1px solid #333; }
+    </style>
 </head>
-<body>
+<body class="h-screen flex flex-col">
 
-    <header class="navbar">
-        <div class="logo">NEXUSPRO</div>
-        <nav>
-            <button onclick="ExportManager.init()">Exportar Proyecto</button>
-        </nav>
-    </header>
+    <div class="flex flex-1 overflow-hidden">
+        <aside class="sidebar w-72 overflow-y-auto">
+            <div id="tool-menu" class="flex flex-col">
+                <h3 class="p-4 text-gray-500 text-[10px] tracking-widest uppercase">Color & Exposure</h3>
+                <button class="tool-btn" onclick="applyEffect('brightness')">1. Brightness</button>
+                <button class="tool-btn" onclick="applyEffect('contrast')">2. Contrast</button>
+                <button class="tool-btn" onclick="applyEffect('saturation')">3. Saturation</button>
+                <button class="tool-btn" onclick="applyEffect('hue')">4. Hue Shift</button>
+                <button class="tool-btn" onclick="applyEffect('vibrance')">5. Vibrance</button>
+                
+                <h3 class="p-4 text-gray-500 text-[10px] tracking-widest uppercase">Restoration & AI</h3>
+                <button class="tool-btn" onclick="applyEffect('denoise')">6. Denoise AI</button>
+                <button class="tool-btn" onclick="applyEffect('sharpen')">7. Smart Sharpen</button>
+                <button class="tool-btn" onclick="applyEffect('scratch')">8. Scratch Repair</button>
+                <button class="tool-btn" onclick="applyEffect('color-reconstruct')">9. Auto Colorize</button>
+                <button class="tool-btn" onclick="applyEffect('upscale')">10. Super Resolution</button>
+                
+                <p class="p-4 text-xs italic text-blue-500">... +20 funciones avanzadas (Blur, Vignette, LUTs, etc.)</p>
+            </div>
+        </aside>
 
-    <aside class="sidebar-tools">
-        <div class="tool-group">
-            <h3>Edición</h3>
-            <button data-tool="brush">Pincel</button>
-            <button data-tool="mask">Máscara</button>
-        </div>
-        <div class="tool-group">
-            <h3>AI Engine</h3>
-            <button id="gen-fill-btn">Relleno Generativo</button>
-        </div>
-    </aside>
+        <main class="flex-1 flex flex-col items-center justify-center">
+            <canvas id="canvas"></canvas>
+            <input type="file" id="input" class="mt-4">
+        </main>
+    </div>
 
-    <main class="viewport">
-        <canvas id="mainCanvas"></canvas>
-        
-        <section id="timeline" class="timeline-container">
-            <div class="track" id="video-track"></div>
-            <div class="track" id="audio-track"></div>
-        </section>
-    </main>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
 
-    <aside class="sidebar-props">
-        <div class="property-panel">
-            <h3>Ajustes</h3>
-            <label>Brillo
-                <input type="range" data-control="brightness" min="0" max="200" value="100">
-            </label>
-            <label>Contraste
-                <input type="range" data-control="contrast" min="0" max="200" value="100">
-            </label>
-        </div>
-    </aside>
+        // MOTOR CENTRALIZADO DE COMANDOS (Patrón Enterprise)
+        const Effects = {
+            brightness: (d) => { /* Lógica de procesamiento de pixels */ },
+            contrast: (d) => { /* Lógica de contraste */ },
+            denoise: (d) => { /* Integración con TF.js */ },
+            // ... Aquí defines las 30 funciones
+        };
 
-    <section id="contact-modal" class="hidden">
-        <form id="contactForm">
-            <input type="email" id="userEmail" required placeholder="Tu correo corporativo">
-            <button type="submit">Enviar reporte</button>
-        </form>
-    </section>
+        function applyEffect(effectName) {
+            if (!img.src) return alert("Carga una imagen primero");
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            // Ejecutar la función elegida
+            if(Effects[effectName]) {
+                Effects[effectName](imageData.data);
+                ctx.putImageData(imageData, 0, 0);
+            }
+        }
 
-    <script type="module" src="js/app.js"></script>
+        // Carga de archivos
+        document.getElementById('input').onchange = (e) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        };
+    </script>
 </body>
 </html>
