@@ -2,90 +2,77 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Aether Restoration Suite | Professional Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroLingua V310 - Sistema de Aprendizaje</title>
+    
+    <!-- Librerías Externas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    
     <style>
-        /* Diseño "Dark Studio" - Estilo DaVinci */
-        :root { --bg: #121212; --panel: #1e1e1e; --accent: #007bff; --text: #d4d4d4; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; }
+        :root {
+            --primary: #8b5cf6; --accent: #06b6d4; --dark: #0f172a; --panel: #1e293b;
+            --text: #f1f5f9; --green: #22c55e; --red: #ef4444;
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--dark); color: var(--text); margin: 0; height: 100vh; display: flex; overflow: hidden; }
+        .layout { display: flex; width: 100%; height: 100%; }
         
-        #sidebar { width: 320px; background: var(--panel); border-right: 1px solid #333; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        #workspace { flex: 1; display: flex; flex-direction: column; }
+        /* Panel Izquierdo */
+        .left-panel { width: 350px; background: var(--panel); border-right: 1px solid #334155; display: flex; flex-direction: column; padding: 15px; gap: 10px; }
+        .brand { font-size: 1.2rem; font-weight: 800; color: var(--accent); text-align: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #334155; }
+        .config-box { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid #334155; }
+        .row { display: flex; gap: 5px; margin-bottom: 5px; }
+        input, select { background: #0f172a; color: white; border: 1px solid #475569; padding: 8px; border-radius: 4px; width: 100%; }
+        button { cursor: pointer; padding: 8px; border-radius: 4px; border: none; font-weight: 600; color: white; transition: 0.2s; }
+        button:hover { filter: brightness(1.1); }
         
-        .tab-bar { padding: 10px; background: #000; display: flex; gap: 10px; }
-        .tab-btn { background: #333; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px; }
-        .tab-btn:hover { background: var(--accent); }
-        
-        #viewport { flex: 1; display: flex; align-items: center; justify-content: center; background: #0a0a0a; border: 2px dashed #333; margin: 20px; }
-        
-        .control-group { display: flex; flex-direction: column; gap: 8px; }
-        input[type=range] { width: 100%; cursor: pointer; }
+        /* Lista */
+        .words-list-container { flex: 1; overflow-y: auto; background: #0f172a; border-radius: 5px; padding: 5px; border: 1px solid #334155; }
+        .list-item { padding: 8px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; cursor: pointer; border-radius: 4px; }
+        .list-item:hover { background: #334155; }
+        .list-item.active { background: var(--primary); }
+
+        /* Panel Derecho */
+        .right-panel { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .flashcard { width: 100%; max-width: 600px; background: #1e293b; border-radius: 20px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; }
+        .word-en { font-size: 3rem; font-weight: 900; margin: 0; color: white; }
+        .word-es { font-size: 1.8rem; color: var(--accent); margin: 10px 0; font-weight: 600; cursor: pointer; }
+        .btn-eval { width: 100%; max-width: 600px; padding: 15px; margin-top: 15px; font-size: 1.1rem; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <aside id="sidebar">
-        <h3>Aether Restoration</h3>
-        <div class="control-group">
-            <label>Denoising Strength</label>
-            <input type="range" id="denoise" min="0" max="100">
+<div class="layout">
+    <div class="left-panel">
+        <div class="brand">NEURO LINGUA V310</div>
+        <div class="config-box">
+            <input type="text" id="filename" placeholder="Nombre de lista...">
+            <div class="row" style="margin-top:5px;">
+                <button style="background:var(--green); flex:1" onclick="saveList()">💾 Guardar</button>
+                <button style="background:var(--blue); flex:1" onclick="loadList()">📂 Abrir</button>
+            </div>
+            <button style="width:100%; background:var(--primary); margin-top:5px" onclick="openModal()">📝 Importar Texto</button>
         </div>
-        <div class="control-group">
-            <label>AI Upscaling</label>
-            <input type="range" id="upscale" min="1" max="4">
+        <div class="list-header">Lista de Palabras</div>
+        <div id="visualList" class="words-list-container"></div>
+    </div>
+
+    <div class="right-panel">
+        <div class="flashcard">
+            <h1 id="wordEn" class="word-en">Bienvenido</h1>
+            <div id="wordEs" class="word-es">Pulsa importar para comenzar</div>
+            <div id="sentencia" style="color:#94a3b8; margin-top:20px; font-style:italic;"></div>
         </div>
-        <button id="btn-process" style="margin-top:20px; padding: 10px; background: var(--accent); color: white; border: none;">Ejecutar Pipeline IA</button>
-        
-        <div id="support-section" style="margin-top: auto; border-top: 1px solid #333; pt: 20px;">
-            <input type="text" id="ticket-msg" placeholder="Soporte Técnico..." style="width: 100%;">
-            <button onclick="sendTicket()">Enviar</button>
+        <div class="row" style="width:100%; max-width:600px; justify-content:center; gap:10px;">
+            <button class="btn-eval" style="background:var(--red)" onclick="markWord('review')">❌ No me la sé</button>
+            <button class="btn-eval" style="background:var(--green)" onclick="markWord('learned')">✅ Ya la sé</button>
         </div>
-    </aside>
+    </div>
+</div>
 
-    <main id="workspace">
-        <nav class="tab-bar">
-            <button class="tab-btn" onclick="showTab('photo')">Photo Restoration</button>
-            <button class="tab-btn" onclick="showTab('video')">Video Enhancement</button>
-        </nav>
-        <div id="viewport">
-            <p>Arrastra archivos aquí para inicializar el buffer</p>
-        </div>
-    </main>
-
-    <script type="module">
-        // Patrón de Módulos: Gestión de Estado Centralizado
-        const State = {
-            settings: { denoise: 0, upscale: 1 },
-            init() {
-                console.log("Aether Suite: Módulo de estado inicializado.");
-            }
-        };
-
-        // Lógica de Web Worker para TensorFlow.js
-        const workerCode = `
-            self.onmessage = (e) => {
-                // Aquí se integrarían los modelos de TF.js (ej: tf.loadGraphModel)
-                console.log("Procesando en hilo secundario:", e.data);
-                self.postMessage({ status: 'success', data: 'Procesamiento IA completado' });
-            };
-        `;
-        const blob = new Blob([workerCode], { type: 'application/javascript' });
-        const worker = new Worker(URL.createObjectURL(blob));
-
-        worker.onmessage = (e) => alert(e.data.data);
-
-        document.getElementById('btn-process').onclick = () => {
-            worker.postMessage({ action: 'RUN_PIPELINE', settings: State.settings });
-        };
-
-        window.sendTicket = async () => {
-            const msg = document.getElementById('ticket-msg').value;
-            console.log("Enviando reporte a Webhook:", msg);
-            // Implementación de fetch a API de soporte aquí
-        };
-
-        window.showTab = (tab) => console.log("Cambiando a:", tab);
-        
-        State.init();
-    </script>
+<script>
+    // Tu lógica original de JavaScript va aquí...
+    // [Insertar el script que ya tienes funcionando]
+</script>
 </body>
 </html>
