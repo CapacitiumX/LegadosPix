@@ -3,305 +3,946 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Vision Studio - Funcional</title>
+    <title>AURA | High-End Restoration & Montage Laboratory</title>
     <style>
-        /* Variables y Reset Base */
+        /* ==========================================================================
+           AURA - DIALÉCTICA VISUAL Y UX (HIGH-END BRUTALISM)
+           ========================================================================== */
         :root {
-            --bg-primary: #0a0a0c; --bg-secondary: #141417; --bg-tertiary: #1f1f23;
-            --text-main: #f3f3f4; --text-muted: #8b8b93;
-            --accent-primary: #6366f1; --accent-hover: #4f46e5;
-            --border-light: rgba(255, 255, 255, 0.08);
-            --font-main: system-ui, -apple-system, sans-serif;
+            --bg-base: #030303;
+            --bg-panel: #0a0a0a;
+            --bg-elevated: #121212;
+            --border-subtle: #222222;
+            --border-focus: #444444;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --accent-primary: #ffffff;
+            --accent-brand: #e4e4e7;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-main); background: var(--bg-primary); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 
-        /* Header */
-        header { height: 60px; background: var(--bg-secondary); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
-        .brand { font-weight: bold; font-size: 1.2rem; background: linear-gradient(90deg, #fff, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tabs-container { display: flex; background: var(--bg-tertiary); border-radius: 8px; padding: 4px; }
-        .tab-btn { background: transparent; color: var(--text-muted); padding: 8px 24px; border-radius: 6px; font-weight: 500; transition: 0.3s; }
-        .tab-btn.active { background: var(--bg-secondary); color: var(--text-main); }
-        .btn-export { background: var(--accent-primary); color: white; padding: 8px 20px; border-radius: 6px; font-weight: 600; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-        /* Workspaces */
-        main { flex: 1; display: flex; position: relative; }
-        .workspace { display: none; width: 100%; height: 100%; }
-        .workspace.active { display: flex; }
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
-        /* Sidebar UI */
-        .sidebar { width: 300px; background: var(--bg-secondary); border-right: 1px solid var(--border-light); display: flex; flex-direction: column; overflow-y: auto; }
-        .panel-section { padding: 20px; border-bottom: 1px solid var(--border-light); }
-        .panel-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
-        
-        /* Sliders & Botones */
-        .slider-container { margin-top: 15px; }
-        .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
-        input[type="range"] { width: 100%; cursor: pointer; }
-        .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-tool { background: var(--bg-tertiary); border: 1px solid var(--border-light); color: white; padding: 12px; border-radius: 8px; font-size: 0.85rem; transition: 0.2s; }
-        .btn-tool:hover { border-color: var(--accent-primary); }
-        .btn-action { width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-light); color: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3, h4 {
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
 
-        /* Centro de Edición */
-        .editor-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #000; position: relative; }
-        .upload-area { width: 100%; max-width: 600px; height: 300px; border: 2px dashed var(--border-light); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; background: var(--bg-secondary); }
-        .upload-area:hover { border-color: var(--accent-primary); }
-        
-        /* Media Elements */
-        #photo-preview { max-width: 100%; max-height: 80vh; display: none; transition: filter 0.1s; }
-        .video-wrapper { position: relative; width: 100%; max-width: 800px; display: none; }
-        video { width: 100%; border-radius: 8px; background: black; }
-        
-        /* Controles de Video */
-        .video-controls { width: 100%; max-width: 800px; background: var(--bg-secondary); padding: 12px 20px; border-radius: 8px; display: none; align-items: center; gap: 15px; margin-top: 15px; border: 1px solid var(--border-light); }
-        .ctrl-btn { background: none; color: white; font-size: 1.2rem; width: 30px; }
-        .time-display { font-size: 0.85rem; font-family: monospace; color: var(--text-muted); }
-        .progress-bar { flex: 1; height: 6px; background: var(--bg-tertiary); border-radius: 3px; cursor: pointer; position: relative; }
-        .progress-fill { height: 100%; background: var(--accent-primary); width: 0%; border-radius: 3px; pointer-events: none; }
+        .mono-text {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
 
-        /* Texto Dinámico (Video) */
-        .overlay-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2rem; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); cursor: text; outline: none; border: 1px dashed transparent; padding: 5px; }
-        .overlay-text:focus { border-color: var(--accent-primary); }
+        /* --- LAYOUT ARCHITECTURE --- */
+        #app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* --- TOP NAVIGATION (TABS) --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+            background: var(--bg-base);
+            z-index: 10;
+        }
+
+        .brand {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding-bottom: 0.5rem;
+            position: relative;
+            transition: color var(--transition-smooth);
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background-color: var(--accent-primary);
+            transition: width var(--transition-smooth);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active::after {
+            width: 100%;
+        }
+
+        /* --- WORKSPACES --- */
+        .workspace {
+            display: none;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .workspace.active {
+            display: flex;
+        }
+
+        /* --- PHOTO LAB STYLES --- */
+        #photo-lab {
+            flex-direction: row;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .sidebar-title {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 0.5rem;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .btn-tool {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 0.85rem 1rem;
+            text-align: left;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-tool:hover {
+            border-color: var(--border-focus);
+            background: var(--bg-elevated);
+        }
+
+        .btn-tool.processing {
+            animation: pulse 1.5s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .main-canvas-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-base);
+            position: relative;
+        }
+
+        .dropzone {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            right: 2rem;
+            bottom: 2rem;
+            border: 1px dashed var(--border-focus);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all var(--transition-smooth);
+            z-index: 5;
+        }
+
+        .dropzone.dragover {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: var(--accent-primary);
+        }
+
+        .dropzone.hidden {
+            display: none;
+        }
+
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .action-bar {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            background: var(--bg-panel);
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--bg-base);
+            border: none;
+            padding: 0.75rem 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform var(--transition-smooth), opacity var(--transition-smooth);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* --- VIDEO STUDIO STYLES --- */
+        #video-studio {
+            flex-direction: column;
+        }
+
+        .video-top {
+            flex: 1;
+            display: flex;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .video-preview {
+            flex: 1;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #video-canvas {
+            background: #0a0a0a;
+            aspect-ratio: 16/9;
+            width: 80%;
+            max-height: 80%;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .timeline-container {
+            height: 250px;
+            background: var(--bg-panel);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .timeline-tools {
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: var(--bg-elevated);
+            border-color: var(--text-primary);
+        }
+
+        .timeline-tracks {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .track {
+            height: 40px;
+            background: var(--bg-elevated);
+            margin-bottom: 0.5rem;
+            border-radius: 2px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .track-label {
+            position: absolute;
+            left: 10px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            z-index: 2;
+        }
+
+        .clip {
+            position: absolute;
+            height: 100%;
+            background: var(--border-focus);
+            border: 1px solid var(--text-secondary);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .clip:hover {
+            background: #555;
+        }
+
+        .clip.video-clip { background: #1a365d; border-color: #2b6cb0; }
+        .clip.audio-clip { background: #1c4532; border-color: #276749; }
+        .clip.text-clip { background: #5f370e; border-color: #975a16; }
+
+        .playhead {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ff3333;
+            left: 20%;
+            z-index: 10;
+        }
+
+        .playhead::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -4px;
+            width: 10px;
+            height: 10px;
+            background: #ff3333;
+            transform: rotate(45deg);
+        }
+
+        /* --- CONTACT FORM (ZERO FRICTION) --- */
+        #contact-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(3, 3, 3, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity var(--transition-smooth);
+        }
+
+        #contact-modal.visible {
+            display: flex;
+            opacity: 1;
+        }
+
+        .contact-box {
+            width: 100%;
+            max-width: 500px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-subtle);
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .contact-box h2 {
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            padding: 0.5rem 0;
+            transition: border-color 0.3s;
+        }
+
+        .input-group textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none;
+            border-bottom-color: var(--text-primary);
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 0.5rem;
+            left: 0;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label,
+        .input-group textarea:focus ~ label,
+        .input-group textarea:valid ~ label {
+            top: -1rem;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .system-response {
+            display: none;
+            margin-top: 2rem;
+            padding: 1rem;
+            border-left: 2px solid var(--accent-primary);
+            background: var(--bg-elevated);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #d4d4d8;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="brand">✨ AURA STUDIO</div>
-        <div class="tabs-container">
-            <button class="tab-btn active" data-target="photo-lab">Lab. Fotografía</button>
-            <button class="tab-btn" data-target="video-studio">Estudio de Video</button>
-        </div>
-        <button class="btn-export">Exportar Proyecto</button>
-    </header>
+    <div id="app-container">
+        <header>
+            <div class="brand">AURA <span class="mono-text" style="margin-left: 10px;">Lab</span></div>
+            <nav class="tabs">
+                <button class="tab-btn active" data-target="photo-lab">Laboratorio Fotográfico</button>
+                <button class="tab-btn" data-target="video-studio">Estudio Audiovisual</button>
+                <button class="tab-btn" id="open-contact">Conexión</button>
+            </nav>
+        </header>
 
-    <main>
-        <section id="photo-lab" class="workspace active">
+        <main id="photo-lab" class="workspace active">
             <aside class="sidebar">
-                <div class="panel-section">
-                    <h3 class="panel-title">Filtros Rápidos</h3>
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title mono-text">Algoritmos de Restauración</h3>
                     <div class="tool-grid">
-                        <button class="btn-tool" onclick="applyPreset('grayscale(100%)')">B & N</button>
-                        <button class="btn-tool" onclick="applyPreset('sepia(80%)')">Vintage</button>
-                        <button class="btn-tool" onclick="applyPreset('saturate(200%)')">Vibrante</button>
-                        <button class="btn-tool" onclick="applyPreset('none')">Original</button>
+                        <button class="btn-tool" data-action="scratch">
+                            Eliminación de Rasguños <span>[+]</span>
+                        </button>
+                        <button class="btn-tool" data-action="color">
+                            Restauración de Pigmentos <span>[+]</span>
+                        </button>
+                        <button class="btn-tool" data-action="noise">
+                            Supresión de Ruido Cuántico <span>[+]</span>
+                        </button>
                     </div>
                 </div>
-                <div class="panel-section">
-                    <h3 class="panel-title">Ajustes Manuales</h3>
-                    
-                    <div class="slider-container">
-                        <div class="slider-label"><span>Brillo</span> <span id="val-bright">100%</span></div>
-                        <input type="range" id="slide-bright" min="0" max="200" value="100">
-                    </div>
-                    
-                    <div class="slider-container">
-                        <div class="slider-label"><span>Contraste</span> <span id="val-cont">100%</span></div>
-                        <input type="range" id="slide-cont" min="0" max="200" value="100">
-                    </div>
 
-                    <div class="slider-container">
-                        <div class="slider-label"><span>Saturación</span> <span id="val-sat">100%</span></div>
-                        <input type="range" id="slide-sat" min="0" max="200" value="100">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title mono-text">Filtros de Vanguardia</h3>
+                    <div class="tool-grid">
+                        <button class="btn-tool" data-filter="contrast">Contraste Dialéctico</button>
+                        <button class="btn-tool" data-filter="sharpen">Enfoque Brutalista</button>
+                        <button class="btn-tool" data-filter="sepia">Tonalidad Histórica</button>
                     </div>
                 </div>
             </aside>
 
-            <div class="editor-center">
-                <div class="upload-area" id="photo-upload-area" onclick="document.getElementById('photo-input').click()">
-                    <h2>📥 Cargar Fotografía</h2>
-                    <p>Haz clic para seleccionar un archivo</p>
-                    <input type="file" id="photo-input" hidden accept="image/*">
+            <section class="main-canvas-area">
+                <div class="dropzone" id="photo-dropzone">
+                    <h2 style="margin-bottom: 1rem;">Inicializar Lienzo</h2>
+                    <p class="mono-text">Arrastra el archivo maestro aquí</p>
+                    <input type="file" id="file-upload" accept="image/*" style="display: none;">
+                    <button class="btn-tool" style="margin-top: 2rem; width: auto;" onclick="document.getElementById('file-upload').click()">Explorar Sistema</button>
                 </div>
-                <img id="photo-preview" src="" alt="Vista previa">
-            </div>
-        </section>
-
-        <section id="video-studio" class="workspace">
-            <aside class="sidebar">
-                <div class="panel-section">
-                    <h3 class="panel-title">Herramientas de Video</h3>
-                    <button class="btn-action" onclick="document.getElementById('video-input').click()">
-                        📁 Cargar Video Nuevo
-                        <input type="file" id="video-input" hidden accept="video/*">
-                    </button>
-                    <button class="btn-action" id="add-text-btn">
-                        📝 Agregar Texto Dinámico
-                    </button>
-                    <button class="btn-action" onclick="document.getElementById('main-video').currentTime = 0">
-                        ⏮ Reiniciar Video
-                    </button>
+                <div class="canvas-container">
+                    <canvas id="main-photo-canvas"></canvas>
                 </div>
-            </aside>
-
-            <div class="editor-center">
-                <div class="upload-area" id="video-upload-area" onclick="document.getElementById('video-input').click()">
-                    <h2>📥 Cargar Video</h2>
-                    <p>Haz clic para seleccionar un archivo MP4/WebM</p>
+                <div class="action-bar">
+                    <button class="btn-primary" id="btn-download-photo">Exportar Entidad Gráfica</button>
                 </div>
+            </section>
+        </main>
 
-                <div class="video-wrapper" id="video-wrapper">
-                    <video id="main-video"></video>
-                </div>
-
-                <div class="video-controls" id="video-controls">
-                    <button class="ctrl-btn" id="play-pause-btn">▶</button>
-                    <span class="time-display" id="time-display">00:00 / 00:00</span>
-                    <div class="progress-bar" id="progress-bar">
-                        <div class="progress-fill" id="progress-fill"></div>
+        <main id="video-studio" class="workspace">
+            <div class="video-top">
+                <aside class="sidebar" style="width: 280px;">
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title mono-text">Montaje Herramientas</h3>
+                        <div class="tool-grid">
+                            <button class="btn-tool" id="tool-trim">Recorte Preciso</button>
+                            <button class="btn-tool" id="tool-text">Superposición Dinámica</button>
+                            <button class="btn-tool" id="tool-sticker">Inyección de Stickers</button>
+                            <button class="btn-tool" id="tool-transition">Transición Óptica</button>
+                        </div>
                     </div>
+                </aside>
+                <div class="video-preview">
+                    <canvas id="video-canvas"></canvas>
                 </div>
             </div>
-        </section>
-    </main>
+            
+            <div class="timeline-container">
+                <div class="timeline-tools">
+                    <button class="btn-icon" id="btn-play">▶</button>
+                    <button class="btn-icon" id="btn-pause">⏸</button>
+                    <div class="mono-text" style="display: flex; align-items: center; margin-left: 1rem;" id="timecode">00:00:00:00</div>
+                    <div style="flex: 1;"></div>
+                    <button class="btn-primary" id="btn-export-video" style="padding: 0.4rem 1rem; font-size: 0.75rem;">Renderizar Secuencia</button>
+                </div>
+                <div class="timeline-tracks" id="timeline-tracks">
+                    <div class="playhead" id="playhead"></div>
+                    </div>
+            </div>
+        </main>
+
+        <div id="contact-modal">
+            <button class="close-modal" id="close-contact">×</button>
+            <div class="contact-box">
+                <h2>Conexión Directa</h2>
+                <form id="dialectic-form">
+                    <div class="input-group">
+                        <input type="email" id="contact-email" required>
+                        <label>Identificador (Correo Electrónico)</label>
+                    </div>
+                    <div class="input-group">
+                        <textarea id="contact-need" required></textarea>
+                        <label>Dialéctica de la Necesidad Técnica</label>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Transmitir</button>
+                </form>
+                <div class="system-response" id="system-response">
+                    </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // --- NAVEGACIÓN POR PESTAÑAS ---
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.workspace').forEach(w => w.classList.remove('active'));
-                e.target.classList.add('active');
-                document.getElementById(e.target.dataset.target).classList.add('active');
+        /**
+         * ==========================================================================
+         * AURA CORE LOGIC - JAVASCRIPT ARCHITECTURE
+         * ==========================================================================
+         */
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- TAB ROUTING LOGIC ---
+            const tabBtns = document.querySelectorAll('.tab-btn[data-target]');
+            const workspaces = document.querySelectorAll('.workspace');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.getAttribute('data-target');
+                    
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    workspaces.forEach(w => w.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+
+            // --- PHOTO LAB PRAXIS ---
+            const dropzone = document.getElementById('photo-dropzone');
+            const fileUpload = document.getElementById('file-upload');
+            const photoCanvas = document.getElementById('main-photo-canvas');
+            const ctxPhoto = photoCanvas.getContext('2d');
+            let currentImage = null;
+
+            // Drag & Drop Mechanics
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, () => dropzone.classList.add('dragover'), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, () => dropzone.classList.remove('dragover'), false);
+            });
+
+            dropzone.addEventListener('drop', handleDrop, false);
+            fileUpload.addEventListener('change', handleFileSelect, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+
+            function handleFileSelect(e) {
+                const files = e.target.files;
+                handleFiles(files);
+            }
+
+            function handleFiles(files) {
+                if (files.length === 0) return;
+                const file = files[0];
+                if (!file.type.match('image.*')) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        currentImage = img;
+                        renderImage(img);
+                        dropzone.classList.add('hidden');
+                    };
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+
+            function renderImage(img, filterString = 'none') {
+                photoCanvas.width = img.width;
+                photoCanvas.height = img.height;
+                ctxPhoto.filter = filterString;
+                ctxPhoto.drawImage(img, 0, 0);
+                ctxPhoto.filter = 'none'; // Reset
+            }
+
+            // Algorithmic Tools Simulation
+            const toolBtns = document.querySelectorAll('#photo-lab .btn-tool');
+            toolBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!currentImage) {
+                        alert("Sistema requiere inyección de imagen previa.");
+                        return;
+                    }
+                    
+                    const btnElement = this;
+                    btnElement.classList.add('processing');
+                    btnElement.querySelector('span') ? btnElement.querySelector('span').innerText = '[...]' : null;
+                    
+                    // Simulate processing time based on high-end perception
+                    setTimeout(() => {
+                        btnElement.classList.remove('processing');
+                        btnElement.querySelector('span') ? btnElement.querySelector('span').innerText = '[✓]' : null;
+                        
+                        const action = btnElement.getAttribute('data-action');
+                        const filter = btnElement.getAttribute('data-filter');
+                        
+                        if (filter) {
+                            applyFilter(filter);
+                        } else if (action) {
+                            applyAlgorithmicTransformation(action);
+                        }
+                    }, 1200);
+                });
+            });
+
+            function applyFilter(filterType) {
+                let filterStr = 'none';
+                switch(filterType) {
+                    case 'contrast': filterStr = 'contrast(150%) saturate(1.2)'; break;
+                    case 'sharpen': filterStr = 'brightness(1.1) contrast(1.2)'; break; // Basic approximation
+                    case 'sepia': filterStr = 'sepia(100%) contrast(1.1)'; break;
+                }
+                renderImage(currentImage, filterStr);
+            }
+
+            function applyAlgorithmicTransformation(action) {
+                // Simulating advanced AI canvas manipulation via basic pixel data operations
+                const imageData = ctxPhoto.getImageData(0, 0, photoCanvas.width, photoCanvas.height);
+                const data = imageData.data;
+                
+                if (action === 'color') {
+                    // Fake colorization logic (warming up pixels)
+                    for (let i = 0; i < data.length; i += 4) {
+                        data[i] = Math.min(255, data[i] * 1.2);     // R
+                        data[i+1] = Math.min(255, data[i+1] * 1.05); // G
+                        data[i+2] = Math.min(255, data[i+2] * 0.9);  // B
+                    }
+                } else if (action === 'noise') {
+                    // Fake blur/denoise
+                    ctxPhoto.filter = 'blur(1px)';
+                    ctxPhoto.drawImage(photoCanvas, 0, 0);
+                    ctxPhoto.filter = 'none';
+                    return;
+                }
+                
+                ctxPhoto.putImageData(imageData, 0, 0);
+            }
+
+            // Export Photo
+            document.getElementById('btn-download-photo').addEventListener('click', () => {
+                if (!currentImage) return;
+                const link = document.createElement('a');
+                link.download = 'AURA_Restoration_Master.png';
+                link.href = photoCanvas.toDataURL('image/png');
+                link.click();
+            });
+
+            // --- VIDEO STUDIO PRAXIS ---
+            const videoCanvas = document.getElementById('video-canvas');
+            const ctxVideo = videoCanvas.getContext('2d');
+            let videoAnimationFrame;
+            let isPlaying = false;
+            let currentFrame = 0;
+
+            // Initialize Video Canvas Placeholder
+            function drawVideoPlaceholder() {
+                ctxVideo.fillStyle = '#0a0a0a';
+                ctxVideo.fillRect(0, 0, videoCanvas.width, videoCanvas.height);
+                ctxVideo.fillStyle = '#333';
+                ctxVideo.font = '24px monospace';
+                ctxVideo.textAlign = 'center';
+                ctxVideo.fillText('LIENZO AUDIOVISUAL INACTIVO', videoCanvas.width/2, videoCanvas.height/2);
+            }
+            // Execute on slight delay to ensure canvas size is computed
+            setTimeout(() => {
+                videoCanvas.width = videoCanvas.clientWidth;
+                videoCanvas.height = videoCanvas.clientHeight;
+                drawVideoPlaceholder();
+            }, 100);
+
+            // Mock Timeline Generation
+            const tracksContainer = document.getElementById('timeline-tracks');
+            const trackTypes = ['Video (Master)', 'Video (Overlay)', 'Audio (FX)', 'Subtítulos'];
+            
+            trackTypes.forEach((label, index) => {
+                const track = document.createElement('div');
+                track.className = 'track';
+                
+                const trackLabel = document.createElement('div');
+                trackLabel.className = 'track-label';
+                trackLabel.innerText = label;
+                track.appendChild(trackLabel);
+                
+                // Add mock clips
+                const clip = document.createElement('div');
+                let clipClass = 'video-clip';
+                if(label.includes('Audio')) clipClass = 'audio-clip';
+                if(label.includes('Subtítulos')) clipClass = 'text-clip';
+                
+                clip.className = `clip ${clipClass}`;
+                clip.style.left = `${15 + (index * 10)}%`;
+                clip.style.width = `${30 + (index * 5)}%`;
+                
+                track.appendChild(clip);
+                tracksContainer.appendChild(track);
+            });
+
+            // Playback logic
+            const playhead = document.getElementById('playhead');
+            const timecodeDisplay = document.getElementById('timecode');
+
+            function updateTimecode(frame) {
+                const totalSeconds = Math.floor(frame / 30); // Assuming 30fps
+                const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+                const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+                const s = (totalSeconds % 60).toString().padStart(2, '0');
+                const f = (frame % 30).toString().padStart(2, '0');
+                timecodeDisplay.innerText = `${h}:${m}:${s}:${f}`;
+            }
+
+            function playLoop() {
+                if (!isPlaying) return;
+                currentFrame++;
+                updateTimecode(currentFrame);
+                
+                // Move playhead
+                const pos = (currentFrame / 900) * 100; // Mock 30 sec timeline
+                if (pos > 100) {
+                    isPlaying = false;
+                    currentFrame = 0;
+                    playhead.style.left = '0%';
+                    return;
+                }
+                playhead.style.left = `${pos}%`;
+
+                // Render dynamic canvas
+                ctxVideo.fillStyle = '#0a0a0a';
+                ctxVideo.fillRect(0, 0, videoCanvas.width, videoCanvas.height);
+                
+                // Draw some abstract rendering to simulate video
+                ctxVideo.strokeStyle = '#222';
+                ctxVideo.lineWidth = 2;
+                ctxVideo.beginPath();
+                ctxVideo.moveTo(0, videoCanvas.height/2 + Math.sin(currentFrame * 0.1) * 50);
+                for(let i=0; i<videoCanvas.width; i+=20) {
+                    ctxVideo.lineTo(i, videoCanvas.height/2 + Math.sin((currentFrame + i) * 0.1) * 50);
+                }
+                ctxVideo.stroke();
+
+                ctxVideo.fillStyle = '#fff';
+                ctxVideo.font = '16px monospace';
+                ctxVideo.fillText(`RENDERIZANDO FRAME: ${currentFrame}`, videoCanvas.width/2, videoCanvas.height - 30);
+
+                videoAnimationFrame = requestAnimationFrame(playLoop);
+            }
+
+            document.getElementById('btn-play').addEventListener('click', () => {
+                if(!isPlaying) {
+                    isPlaying = true;
+                    playLoop();
+                }
+            });
+
+            document.getElementById('btn-pause').addEventListener('click', () => {
+                isPlaying = false;
+                cancelAnimationFrame(videoAnimationFrame);
+            });
+
+            // Tool Interactivity in Video Studio
+            const videoTools = ['tool-trim', 'tool-text', 'tool-sticker', 'tool-transition'];
+            videoTools.forEach(id => {
+                document.getElementById(id).addEventListener('click', function() {
+                    const originalText = this.innerText;
+                    this.innerText = 'Activando...';
+                    this.style.borderColor = 'var(--text-primary)';
+                    setTimeout(() => {
+                        this.innerText = originalText;
+                        this.style.borderColor = 'var(--border-subtle)';
+                    }, 500);
+                });
+            });
+
+            // Export Video
+            document.getElementById('btn-export-video').addEventListener('click', () => {
+                alert("Compilando arquitectura audiovisual. La descarga comenzará en breve (Simulación).");
+            });
+
+            // --- ZERO FRICTION CONTACT MECHANISM ---
+            const contactModal = document.getElementById('contact-modal');
+            const btnOpenContact = document.getElementById('open-contact');
+            const btnCloseContact = document.getElementById('close-contact');
+            const dialecticForm = document.getElementById('dialectic-form');
+            const systemResponse = document.getElementById('system-response');
+
+            btnOpenContact.addEventListener('click', () => {
+                contactModal.classList.add('visible');
+            });
+
+            btnCloseContact.addEventListener('click', () => {
+                contactModal.classList.remove('visible');
+                // Reset form state on close
+                setTimeout(() => {
+                    systemResponse.style.display = 'none';
+                    dialecticForm.style.display = 'block';
+                    dialecticForm.reset();
+                }, 400);
+            });
+
+            dialecticForm.addEventListener('submit', (e) => {
+                e.preventDefault(); // Intercept submit
+                
+                // Read values (optional validation log)
+                const email = document.getElementById('contact-email').value;
+                const need = document.getElementById('contact-need').value;
+                
+                if(email && need) {
+                    dialecticForm.style.display = 'none';
+                    systemResponse.style.display = 'block';
+                    // Strict output condition met here
+                    systemResponse.innerText = "Hemos recibido la dialéctica de tu necesidad fotográfica y tu contacto. Nuestro algoritmo está listo para la restauración.";
+                }
+            });
+
+            // Escape key closes modal
+            document.addEventListener('keydown', (e) => {
+                if(e.key === 'Escape' && contactModal.classList.contains('visible')) {
+                    btnCloseContact.click();
+                }
             });
         });
-
-        // ==========================================
-        // LÓGICA DE FOTOGRAFÍA FUNCIONAL
-        // ==========================================
-        const photoInput = document.getElementById('photo-input');
-        const photoUploadArea = document.getElementById('photo-upload-area');
-        const photoPreview = document.getElementById('photo-preview');
-        
-        // Carga real de la imagen usando URL temporal
-        photoInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                photoPreview.src = URL.createObjectURL(file);
-                photoUploadArea.style.display = 'none';
-                photoPreview.style.display = 'block';
-                resetSliders();
-            }
-        });
-
-        // Motor de filtros CSS combinados en tiempo real
-        const sBright = document.getElementById('slide-bright');
-        const sCont = document.getElementById('slide-cont');
-        const sSat = document.getElementById('slide-sat');
-
-        function updateFilters() {
-            document.getElementById('val-bright').innerText = sBright.value + '%';
-            document.getElementById('val-cont').innerText = sCont.value + '%';
-            document.getElementById('val-sat').innerText = sSat.value + '%';
-            
-            photoPreview.style.filter = `brightness(${sBright.value}%) contrast(${sCont.value}%) saturate(${sSat.value}%)`;
-        }
-
-        [sBright, sCont, sSat].forEach(slider => {
-            slider.addEventListener('input', updateFilters);
-        });
-
-        function applyPreset(filterString) {
-            if(filterString === 'none') {
-                resetSliders();
-            } else {
-                photoPreview.style.filter = filterString;
-            }
-        }
-
-        function resetSliders() {
-            sBright.value = 100; sCont.value = 100; sSat.value = 100;
-            updateFilters();
-        }
-
-        // ==========================================
-        // LÓGICA DE VIDEO FUNCIONAL
-        // ==========================================
-        const videoInput = document.getElementById('video-input');
-        const videoUploadArea = document.getElementById('video-upload-area');
-        const videoWrapper = document.getElementById('video-wrapper');
-        const mainVideo = document.getElementById('main-video');
-        const videoControls = document.getElementById('video-controls');
-        
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const timeDisplay = document.getElementById('time-display');
-        const progressBar = document.getElementById('progress-bar');
-        const progressFill = document.getElementById('progress-fill');
-
-        // Formatear segundos a MM:SS
-        const formatTime = (seconds) => {
-            const m = Math.floor(seconds / 60);
-            const s = Math.floor(seconds % 60);
-            return `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
-        };
-
-        // Carga real del video
-        videoInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                mainVideo.src = URL.createObjectURL(file);
-                videoUploadArea.style.display = 'none';
-                videoWrapper.style.display = 'block';
-                videoControls.style.display = 'flex';
-                
-                // Limpiar textos dinámicos anteriores si se carga nuevo video
-                document.querySelectorAll('.overlay-text').forEach(el => el.remove());
-            }
-        });
-
-        // Play / Pause Funcional
-        playPauseBtn.addEventListener('click', () => {
-            if (mainVideo.paused) {
-                mainVideo.play();
-                playPauseBtn.innerText = '⏸';
-            } else {
-                mainVideo.pause();
-                playPauseBtn.innerText = '▶';
-            }
-        });
-
-        // Actualizar tiempo y barra de progreso
-        mainVideo.addEventListener('timeupdate', () => {
-            if(mainVideo.duration) {
-                const current = mainVideo.currentTime;
-                const duration = mainVideo.duration;
-                
-                timeDisplay.innerText = `${formatTime(current)} / ${formatTime(duration)}`;
-                progressFill.style.width = `${(current / duration) * 100}%`;
-            }
-        });
-
-        // Clic en la barra para adelantar/atrasar
-        progressBar.addEventListener('click', (e) => {
-            const rect = progressBar.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const width = rect.width;
-            const percentage = clickX / width;
-            
-            mainVideo.currentTime = percentage * mainVideo.duration;
-        });
-
-        // Insertar Texto Dinámico Funcional
-        document.getElementById('add-text-btn').addEventListener('click', () => {
-            if(videoWrapper.style.display !== 'block') {
-                alert("Sube un video primero para agregar texto.");
-                return;
-            }
-            
-            const textEl = document.createElement('div');
-            textEl.contentEditable = true;
-            textEl.className = 'overlay-text';
-            textEl.innerText = "Escribe aquí...";
-            
-            // Para que no se active el play del video al hacer click en el texto
-            textEl.addEventListener('click', (e) => e.stopPropagation());
-            
-            videoWrapper.appendChild(textEl);
-            textEl.focus();
-        });
-
     </script>
 </body>
 </html>
