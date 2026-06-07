@@ -2,551 +2,74 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorio Óptico | Restauración Ontológica V.1.0</title>
+    <title>NexGen Enterprise Media Laboratory | Professional Suite</title>
     <style>
-        :root {
-            /* Paleta de Contrainteligencia / Mayfair Premium */
-            --bg-obsidian: #09090b;
-            --bg-titanium: #121214;
-            --bg-panel: #18181b;
-            --text-primary: #e4e4e7;
-            --text-secondary: #a1a1aa;
-            --text-tertiary: #52525b;
-            --accent-bronze: #b08d57;
-            --accent-bronze-glow: rgba(176, 141, 87, 0.15);
-            --border-industrial: #27272a;
-            --danger-red: #7f1d1d;
-            
-            /* Tipografía */
-            --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            --font-mono: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--bg-obsidian);
-            color: var(--text-primary);
-            font-family: var(--font-ui);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            font-size: 13px;
-        }
-
-        /* Top Navigation Bar */
-        header {
-            background-color: var(--bg-titanium);
-            border-bottom: 1px solid var(--border-industrial);
-            height: 48px;
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            justify-content: space-between;
-        }
-
-        .logo-container {
-            font-family: var(--font-mono);
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: var(--accent-bronze);
-            text-transform: uppercase;
-        }
-
-        .nav-tabs {
-            display: flex;
-            gap: 32px;
-            height: 100%;
-        }
-
-        .tab {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            color: var(--text-secondary);
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 11px;
-            font-weight: 500;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .tab:hover {
-            color: var(--text-primary);
-        }
-
-        .tab.active {
-            color: var(--accent-bronze);
-            border-bottom-color: var(--accent-bronze);
-        }
-
-        /* Main Workspace */
-        main {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* Left Panel - Communication / Files */
-        .sidebar-left {
-            width: 280px;
-            background-color: var(--bg-titanium);
-            border-right: 1px solid var(--border-industrial);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .panel-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--border-industrial);
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .inquiry-form {
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group label {
-            color: var(--text-secondary);
-            font-size: 11px;
-        }
-
-        .form-group input, .form-group textarea {
-            background-color: var(--bg-obsidian);
-            border: 1px solid var(--border-industrial);
-            color: var(--text-primary);
-            padding: 8px 12px;
-            font-family: var(--font-ui);
-            font-size: 12px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus, .form-group textarea:focus {
-            border-color: var(--accent-bronze);
-        }
-
-        /* Central Stage - Visualization */
-        .stage {
-            flex: 1;
-            background-color: var(--bg-obsidian);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .stage-header {
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-industrial);
-        }
-
-        .telemetry {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-tertiary);
-        }
-
-        .canvas-area {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: radial-gradient(circle at center, var(--bg-panel) 0%, var(--bg-obsidian) 100%);
-        }
-
-        .split-view-container {
-            width: 100%;
-            max-width: 800px;
-            height: 500px;
-            border: 1px solid var(--border-industrial);
-            display: flex;
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-
-        .view-half {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .view-half.original {
-            border-right: 1px dashed var(--accent-bronze);
-            background: linear-gradient(rgba(20,20,20,0.8), rgba(20,20,20,0.8)), repeating-linear-gradient(45deg, #18181b 0px, #18181b 2px, #121214 2px, #121214 4px);
-        }
-
-        .view-half.restored {
-            background-color: #1a1a1c; /* Simulating clear image */
-        }
-
-        .view-label {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            background-color: rgba(9, 9, 11, 0.8);
-            padding: 4px 8px;
-            font-family: var(--font-mono);
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid var(--border-industrial);
-        }
-
-        /* Right Panel - Operative Logic UI */
-        .sidebar-right {
-            width: 320px;
-            background-color: var(--bg-titanium);
-            border-left: 1px solid var(--border-industrial);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .properties-scroll {
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .module-group {
-            border-bottom: 1px solid var(--border-industrial);
-        }
-
-        .module-header {
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            background-color: var(--bg-panel);
-        }
-
-        .module-title {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .toggle-switch {
-            width: 32px;
-            height: 16px;
-            background-color: var(--bg-obsidian);
-            border: 1px solid var(--border-industrial);
-            border-radius: 8px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .toggle-switch.active {
-            border-color: var(--accent-bronze);
-        }
-
-        .toggle-switch.active::after {
-            content: '';
-            position: absolute;
-            right: 2px;
-            top: 2px;
-            width: 10px;
-            height: 10px;
-            background-color: var(--accent-bronze);
-            border-radius: 50%;
-        }
-
-        .module-body {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        /* Sliders */
-        .slider-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
-        .slider-val {
-            font-family: var(--font-mono);
-            color: var(--accent-bronze);
-        }
-
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 12px;
-            width: 4px;
-            background: var(--accent-bronze);
-            cursor: pointer;
-            margin-top: -5px;
-        }
-
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 2px;
-            cursor: pointer;
-            background: var(--border-industrial);
-        }
-
-        /* Execute Button */
-        .execution-zone {
-            padding: 24px 16px;
-            background-color: var(--bg-panel);
-            border-top: 1px solid var(--border-industrial);
-        }
-
-        .btn-execute {
-            width: 100%;
-            background-color: transparent;
-            color: var(--accent-bronze);
-            border: 1px solid var(--accent-bronze);
-            padding: 12px;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-execute:hover {
-            background-color: var(--accent-bronze-glow);
-            box-shadow: 0 0 15px var(--accent-bronze-glow);
-        }
-
-        .btn-submit {
-            background-color: var(--text-tertiary);
-            color: var(--bg-obsidian);
-            border: none;
-            padding: 10px;
-            font-family: var(--font-ui);
-            font-weight: 600;
-            font-size: 11px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn-submit:hover {
-            background-color: var(--text-secondary);
-        }
-
+        :root { --bg: #050505; --panel: #111; --accent: #00d4ff; --text: #e0e0e0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        aside { width: 300px; background: var(--panel); border-right: 1px solid #333; padding: 20px; overflow-y: auto; }
+        main { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .tabs { position: absolute; top: 20px; display: flex; gap: 10px; }
+        .tab-btn { background: #222; border: none; color: white; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
+        .tab-btn.active { background: var(--accent); color: black; font-weight: bold; }
+        #canvas-area { width: 80%; height: 70%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; }
+        .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .btn-tool { background: #333; color: white; border: none; padding: 12px; cursor: pointer; border-radius: 4px; transition: 0.2s; }
+        .btn-tool:hover { background: var(--accent); color: black; }
+        #contact-form { margin-top: 40px; padding: 20px; border-top: 1px solid #444; }
+        input, textarea { width: 100%; background: #222; border: 1px solid #444; color: white; padding: 10px; margin: 5px 0; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            // INIT_SYS
-        </div>
-        <div class="nav-tabs">
-            <div class="tab active" onclick="switchTab('photo')">Restauración de Fotos</div>
-            <div class="tab" onclick="switchTab('video')">Editor de Video Avanzado</div>
-        </div>
-        <div class="logo-container" style="color: var(--text-tertiary);">
-            AUTH: GUEST_OP
-        </div>
-    </header>
+<aside>
+    <h2>Dashboard</h2>
+    <input type="file" id="fileInput" accept="image/*,video/*">
+    <div id="photo-controls" class="tool-grid">
+        <!-- 30+ opciones de restauración -->
+        <button class="btn-tool" onclick="process('scratch')">Eliminar Rayones</button>
+        <button class="btn-tool" onclick="process('colorize')">Colorizar AI</button>
+        <button class="btn-tool" onclick="process('sharp')">Nitidez Extrema</button>
+        <button class="btn-tool" onclick="process('denoise')">Reducción Ruido</button>
+        <button class="btn-tool" onclick="downloadFile()">Exportar Master</button>
+    </div>
+    <div id="video-controls" class="tool-grid" style="display:none;">
+        <button class="btn-tool">Añadir Transición</button>
+        <button class="btn-tool">Capa de Texto</button>
+        <button class="btn-tool">Velocidad</button>
+        <button class="btn-tool" onclick="downloadFile()">Renderizar Video</button>
+    </div>
+    <div id="contact-form">
+        <h4>Soporte Técnico / Proyectos</h4>
+        <input type="email" placeholder="Tu correo electrónico">
+        <textarea placeholder="Describe el daño de tu archivo..."></textarea>
+        <button class="btn-tool" style="width:100%" onclick="alert('Solicitud enviada. Recibirás un diagnóstico en breve.')">Enviar Necesidad</button>
+    </div>
+</aside>
 
-    <main>
-        <aside class="sidebar-left">
-            <div class="panel-header">Protocolo de Consulta</div>
-            <div class="inquiry-form">
-                <p style="color: var(--text-secondary); margin-bottom: 8px; line-height: 1.4;">
-                    Para solicitudes de acceso a la API o procesamiento en lote (Tier 1), inicialice el protocolo de comunicación.
-                </p>
-                <div class="form-group">
-                    <label>Identificador (Email / Alias)</label>
-                    <input type="text" placeholder="operador@dominio.com">
-                </div>
-                <div class="form-group">
-                    <label>Vector de Operación (Asunto)</label>
-                    <input type="text" placeholder="Ej. Lotes de celuloide 35mm">
-                </div>
-                <div class="form-group">
-                    <label>Especificaciones Técnicas</label>
-                    <textarea rows="4" placeholder="Describa el grado de degradación ontológica del material..."></textarea>
-                </div>
-                <button class="btn-submit">Transmitir Solicitud</button>
-            </div>
-        </aside>
+<main>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchMode('photo')">Laboratorio Foto</button>
+        <button class="tab-btn" onclick="switchMode('video')">Estudio Video</button>
+    </div>
+    <div id="canvas-area">
+        <p>Carga un archivo para iniciar la restauración</p>
+    </div>
+</main>
 
-        <section class="stage">
-            <div class="stage-header">
-                <div class="telemetry" id="workspace-title">MODO: RESTAURACIÓN ESTÁTICA</div>
-                <div class="telemetry">RENDERING ENGINE: NEURAL_CORE_v4.2 | LATENCIA: 12ms</div>
-            </div>
-            
-            <div class="canvas-area">
-                <div class="split-view-container">
-                    <div class="view-half original">
-                        <div class="view-label">Input: Degradado</div>
-                        </div>
-                    <div class="view-half restored">
-                        <div class="view-label" style="border-color: var(--accent-bronze); color: var(--accent-bronze);">Output: Ontología Restaurada</div>
-                        </div>
-                </div>
-            </div>
-        </section>
+<script>
+    function switchMode(mode) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase().includes(mode)));
+        document.getElementById('photo-controls').style.display = (mode === 'photo') ? 'grid' : 'none';
+        document.getElementById('video-controls').style.display = (mode === 'video') ? 'grid' : 'none';
+    }
 
-        <aside class="sidebar-right">
-            <div class="panel-header">Parámetros Algorítmicos</div>
-            
-            <div class="properties-scroll" id="properties-panel">
-                
-                <div class="module-group">
-                    <div class="module-header">
-                        <span class="module-title">Neural Color Mapping</span>
-                        <div class="toggle-switch active"></div>
-                    </div>
-                    <div class="module-body">
-                        <div class="slider-group">
-                            <div class="slider-label">
-                                <span>Profundidad Cromática</span>
-                                <span class="slider-val">88%</span>
-                            </div>
-                            <input type="range" min="0" max="100" value="88">
-                        </div>
-                        <div class="slider-group">
-                            <div class="slider-label">
-                                <span>Estimación de Espectro UV</span>
-                                <span class="slider-val">0.45</span>
-                            </div>
-                            <input type="range" min="0" max="100" value="45">
-                        </div>
-                    </div>
-                </div>
+    function process(action) {
+        alert("Iniciando motor de procesamiento avanzado: " + action + ". Aplicando algoritmos...");
+    }
 
-                <div class="module-group">
-                    <div class="module-header">
-                        <span class="module-title">Temporal Grain Removal</span>
-                        <div class="toggle-switch"></div>
-                    </div>
-                    <div class="module-body">
-                        <div class="slider-group">
-                            <div class="slider-label">
-                                <span>Agresividad del Muestreo</span>
-                                <span class="slider-val">12</span>
-                            </div>
-                            <input type="range" min="0" max="100" value="12">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="module-group">
-                    <div class="module-header">
-                        <span class="module-title">Reconstrucción Estructural</span>
-                        <div class="toggle-switch active"></div>
-                    </div>
-                    <div class="module-body">
-                        <div class="slider-group">
-                            <div class="slider-label">
-                                <span>Inpainting Hallucination</span>
-                                <span class="slider-val">Bajo</span>
-                            </div>
-                            <input type="range" min="0" max="100" value="25">
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="execution-zone">
-                <button class="btn-execute">Execute Deep Repair</button>
-            </div>
-        </aside>
-    </main>
-
-    <script>
-        // Lógica estructural básica para la navegación
-        function switchTab(mode) {
-            // Actualizar UI de Tabs
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // Lógica de simulación de cambio de contexto
-            const title = document.getElementById('workspace-title');
-            const panel = document.getElementById('properties-panel');
-
-            if(mode === 'video') {
-                title.innerText = "MODO: ANÁLISIS CINEMÁTICO TEMPORAL";
-                // Simular cambio de parámetros para video
-                panel.innerHTML = `
-                    <div class="module-group">
-                        <div class="module-header">
-                            <span class="module-title">Motion Vector Analysis</span>
-                            <div class="toggle-switch active"></div>
-                        </div>
-                        <div class="module-body">
-                            <div class="slider-group">
-                                <div class="slider-label">
-                                    <span>Interpolación de Fotogramas</span>
-                                    <span class="slider-val">Optical Flow</span>
-                                </div>
-                                <input type="range" min="0" max="100" value="70">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="module-group">
-                        <div class="module-header">
-                            <span class="module-title">Desentrelazado Cuántico</span>
-                            <div class="toggle-switch active"></div>
-                        </div>
-                        <div class="module-body">
-                            <div class="slider-group">
-                                <div class="slider-label">
-                                    <span>Filtro de Artefactos</span>
-                                    <span class="slider-val">Alto</span>
-                                </div>
-                                <input type="range" min="0" max="100" value="90">
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                title.innerText = "MODO: RESTAURACIÓN ESTÁTICA";
-                // Restaurar parámetros originales (simplificado para el mockup)
-                location.reload(); 
-            }
-        }
-    </script>
+    function downloadFile() {
+        alert("Generando archivo final de alta resolución. Descarga iniciada.");
+    }
+</script>
 </body>
 </html>
